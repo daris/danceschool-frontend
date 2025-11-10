@@ -2,11 +2,12 @@
 import styles from "./Courses.module.css";
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {selectCourse, selectStatus} from "@/lib/features/courses/coursesApiSlice";
+import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
 
 export const Course = (props: {id: string}) => {
   const dispatch = useAppDispatch();
   const status = useAppSelector(selectStatus);
-  const course = useAppSelector((state) => selectCourse(state, props.id));
+  const course = useAppSelector((state) => selectCourseWithUsers(state, props.id));
 
   if (status == 'failed') {
     return (
@@ -32,19 +33,17 @@ export const Course = (props: {id: string}) => {
             <tr>
               <th>{course.name} {course.level}</th>
               {course.lessons.map(lesson => (
-                <th>{lesson.startTime}</th>
+                <th key={lesson.id}>{lesson.startTime}</th>
               ))}
             </tr>
           </thead>
 
           <tbody>
-
-            <tr>
-              <td>{course.name} {course.level}</td>
-              {course.lessons.map(lesson => (
-                <td>{lesson.startTime}</td>
-              ))}
-            </tr>
+            {course.participants.map(participant => (
+              <tr key={participant.id}>
+                <td>{participant.user?.firstName} {participant.user?.lastName}</td>
+              </tr>
+            ))}
           </tbody>
 
         </table>

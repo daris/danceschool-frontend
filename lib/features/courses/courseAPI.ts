@@ -1,7 +1,7 @@
 
 export interface Attendance {
   status: string;
-  _links: any;
+  _links: any; // todo: typings
 }
 
 export interface Lesson {
@@ -11,11 +11,17 @@ export interface Lesson {
   attendances: Attendance[];
 }
 
+class Participant {
+  id: string;
+  _links: any; // todo: typings
+}
+
 export interface Course {
   id: string;
   name: string;
   level: string;
   lessons: Lesson[];
+  participants: Participant[];
 }
 
 export interface EmbeddedCourses {
