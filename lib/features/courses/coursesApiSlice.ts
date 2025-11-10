@@ -1,12 +1,12 @@
 import {createAppSlice} from "@/lib/createAppSlice";
 import {Course, fetchCourses} from "@/lib/features/courses/courseAPI";
 
-export interface CounterSliceState {
+export interface CourseSliceState {
   courses: Course[];
   status: "idle" | "loading" | "failed";
 }
 
-const initialState: CounterSliceState = {
+const initialState: CourseSliceState = {
   courses: [],
   status: "loading",
 };

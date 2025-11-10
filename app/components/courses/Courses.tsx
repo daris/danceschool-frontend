@@ -4,21 +4,18 @@ import styles from "./Courses.module.css";
 import Link from "next/link";
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {loadCourses, selectCourses, selectStatus} from "@/lib/features/courses/coursesApiSlice";
+import {loadUsers} from "@/lib/features/users/usersApiSlice";
 
 const options = [5, 10, 20, 30];
 
 export const Courses = () => {
-  // const [numberOfQuotes, setNumberOfQuotes] = useState(10);
-  // Using a query hook automatically fetches data and returns query values
-  // const { data, isError, isLoading, isSuccess } =
-  //   useGetCoursesQuery(numberOfQuotes);
   const dispatch = useAppDispatch();
   const status = useAppSelector(selectStatus);
   const courses = useAppSelector(selectCourses);
 
   useEffect(() => {
-    // Dispatch only once when the component mounts
     dispatch(loadCourses());
+    dispatch(loadUsers());
   }, [dispatch]);
 
   if (status == 'failed') {
@@ -37,7 +34,7 @@ export const Courses = () => {
     );
   }
 
-  if (status == 'idle') {
+  if (status == 'idle' && courses) {
     return (
       <div className={styles.container}>
         {courses.map((course) => (

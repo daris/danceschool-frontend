@@ -1,7 +1,21 @@
+
+export interface Attendance {
+  status: string;
+  _links: any;
+}
+
+export interface Lesson {
+  id: string;
+  startTime: string;
+  endTime: string;
+  attendances: Attendance[];
+}
+
 export interface Course {
   id: string;
   name: string;
   level: string;
+  lessons: Lesson[];
 }
 
 export interface EmbeddedCourses {
@@ -9,7 +23,7 @@ export interface EmbeddedCourses {
 }
 
 export interface CoursesApiResponse {
-  _embedded: EmbeddedCourses
+  _embedded: EmbeddedCourses;
   total: number;
   skip: number;
   limit: number;

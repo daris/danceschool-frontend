@@ -27,8 +27,27 @@ export const Course = (props: {id: string}) => {
   if (status == 'idle' && course) {
     return (
       <div className={styles.container}>
-        <h3>{course.name} {course.level}</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>{course.name} {course.level}</th>
+              {course.lessons.map(lesson => (
+                <th>{lesson.startTime}</th>
+              ))}
+            </tr>
+          </thead>
 
+          <tbody>
+
+            <tr>
+              <td>{course.name} {course.level}</td>
+              {course.lessons.map(lesson => (
+                <td>{lesson.startTime}</td>
+              ))}
+            </tr>
+          </tbody>
+
+        </table>
       </div>
     );
   }
