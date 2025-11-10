@@ -1,13 +1,20 @@
 "use client";
 import styles from "./Courses.module.css";
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
-import {selectCourse, selectStatus} from "@/lib/features/courses/coursesApiSlice";
+import {loadCourses, selectCourse, selectStatus} from "@/lib/features/courses/coursesApiSlice";
 import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
+import {useEffect} from "react";
+import {loadUsers} from "@/lib/features/users/usersApiSlice";
 
 export const Course = (props: {id: string}) => {
   const dispatch = useAppDispatch();
   const status = useAppSelector(selectStatus);
   const course = useAppSelector((state) => selectCourseWithUsers(state, props.id));
+
+  useEffect(() => {
+    dispatch(loadCourses());
+    dispatch(loadUsers());
+  }, [dispatch]);
 
   if (status == 'failed') {
     return (
@@ -42,6 +49,9 @@ export const Course = (props: {id: string}) => {
             {course.participants.map(participant => (
               <tr key={participant.id}>
                 <td>{participant.user?.firstName} {participant.user?.lastName}</td>
+                {participant.lessonAttendances.map(lessonAttendance => (
+                  <td key={lessonAttendance.lesson.id}>{lessonAttendance.status}</td>
+                ))}
               </tr>
             ))}
           </tbody>

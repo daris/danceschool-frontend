@@ -10,7 +10,13 @@ export const selectCourseWithUsers = createSelector(
     const participantsWithUsers = course.participants.map((participant) => {
       const userId = participant._links.user.href.split('/').pop();
       const user = users.find((u) => u.id === userId);
-      return { ...participant, user };
+
+      const lessonAttendances = course.lessons.map(lesson => {
+        const attendacne = lesson.attendances.find(attendance => attendance._links.user.href.split('/').pop() == user?.id);
+        return {lesson, ...attendacne};
+      })
+
+      return { ...participant, user, lessonAttendances };
     });
 
     return {
