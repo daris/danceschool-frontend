@@ -1,15 +1,15 @@
 "use client";
-import { useGetQuotesQuery } from "@/lib/features/quotes/quotesApiSlice";
+import { useGetCoursesQuery } from "@/lib/features/quotes/coursesApiSlice";
 import { useState } from "react";
-import styles from "./Quotes.module.css";
+import styles from "./Courses.module.css";
 
 const options = [5, 10, 20, 30];
 
-export const Quotes = () => {
+export const Courses = () => {
   const [numberOfQuotes, setNumberOfQuotes] = useState(10);
   // Using a query hook automatically fetches data and returns query values
   const { data, isError, isLoading, isSuccess } =
-    useGetQuotesQuery(numberOfQuotes);
+    useGetCoursesQuery(numberOfQuotes);
 
   if (isError) {
     return (
@@ -44,11 +44,11 @@ export const Quotes = () => {
             </option>
           ))}
         </select>
-        {data.quotes.map(({ author, quote, id }) => (
-          <blockquote key={id}>
-            &ldquo;{quote}&rdquo;
+        {data._embedded.courses.map((course) => (
+          <blockquote key={course.id}>
+            &ldquo;{course.name}&rdquo;
             <footer>
-              <cite>{author}</cite>
+              <cite>{course.level}</cite>
             </footer>
           </blockquote>
         ))}

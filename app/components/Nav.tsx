@@ -26,11 +26,11 @@ export const Nav = () => {
       </Link>
       <Link
         className={`${styles.link} ${
-          pathname === "/quotes" ? styles.active : ""
+          pathname === "/courses" ? styles.active : ""
         }`}
-        href="/quotes"
+        href="/courses"
       >
-        Quotes
+        Courses
       </Link>
     </nav>
   );
