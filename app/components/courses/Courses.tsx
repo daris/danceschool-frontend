@@ -1,18 +1,29 @@
 "use client";
-import { useGetCoursesQuery } from "@/lib/features/quotes/coursesApiSlice";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import styles from "./Courses.module.css";
 import Link from "next/link";
+import {useAppDispatch, useAppSelector} from "@/lib/hooks";
+import {selectStatus} from "@/lib/features/counter/counterSlice";
+import {loadCourses, selectCourses} from "@/lib/features/courses/coursesApiSlice";
 
 const options = [5, 10, 20, 30];
 
 export const Courses = () => {
-  const [numberOfQuotes, setNumberOfQuotes] = useState(10);
+  // const [numberOfQuotes, setNumberOfQuotes] = useState(10);
   // Using a query hook automatically fetches data and returns query values
-  const { data, isError, isLoading, isSuccess } =
-    useGetCoursesQuery(numberOfQuotes);
+  // const { data, isError, isLoading, isSuccess } =
+  //   useGetCoursesQuery(numberOfQuotes);
+  const dispatch = useAppDispatch();
+  const status = useAppSelector(selectStatus);
+  const courses = useAppSelector(selectCourses);
 
-  if (isError) {
+  // dispatch(loadCourses())
+  useEffect(() => {
+    // Dispatch only once when the component mounts
+    dispatch(loadCourses());
+  }, [dispatch]);
+
+  if (status == 'failed') {
     return (
       <div>
         <h1>There was an error!!!</h1>
@@ -20,7 +31,7 @@ export const Courses = () => {
     );
   }
 
-  if (isLoading) {
+  if (status == 'loading') {
     return (
       <div>
         <h1>Loading...</h1>
@@ -28,24 +39,11 @@ export const Courses = () => {
     );
   }
 
-  if (isSuccess) {
+  if (status == 'idle') {
     return (
       <div className={styles.container}>
         <h3>Select the Quantity of Quotes to Fetch:</h3>
-        <select
-          className={styles.select}
-          value={numberOfQuotes}
-          onChange={(e) => {
-            setNumberOfQuotes(Number(e.target.value));
-          }}
-        >
-          {options.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-        {data._embedded.courses.map((course) => (
+        {courses.map((course) => (
           <Link key={course.id} href={"courses/" + course.id}>{course.name} {course.level}</Link>
         ))}
       </div>
