@@ -8,7 +8,7 @@ export interface CounterSliceState {
 
 const initialState: CounterSliceState = {
   courses: [],
-  status: "idle",
+  status: "loading",
 };
 
 // If you are not using async thunks you can use the standalone `createSlice`.
@@ -82,6 +82,7 @@ export const coursesSlice = createAppSlice({
   // state as their first argument.
   selectors: {
     selectCourses: (state) => state.courses,
+    selectCourse: (state, courseId: string) => state.courses.find(course => course.id == courseId),
     selectStatus: (counter) => counter.status,
   },
 });
@@ -91,7 +92,7 @@ export const { loadCourses } =
   coursesSlice.actions;
 
 // Selectors returned by `slice.selectors` take the root state as their first argument.
-export const { selectCourses, selectStatus } = coursesSlice.selectors;
+export const { selectCourses, selectStatus, selectCourse } = coursesSlice.selectors;
 
 // We can also write thunks by hand, which may contain both sync and async logic.
 // Here's an example of conditionally dispatching actions based on current state.
