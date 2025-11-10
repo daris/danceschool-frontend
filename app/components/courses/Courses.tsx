@@ -2,6 +2,7 @@
 import { useGetCoursesQuery } from "@/lib/features/quotes/coursesApiSlice";
 import { useState } from "react";
 import styles from "./Courses.module.css";
+import Link from "next/link";
 
 const options = [5, 10, 20, 30];
 
@@ -45,12 +46,7 @@ export const Courses = () => {
           ))}
         </select>
         {data._embedded.courses.map((course) => (
-          <blockquote key={course.id}>
-            &ldquo;{course.name}&rdquo;
-            <footer>
-              <cite>{course.level}</cite>
-            </footer>
-          </blockquote>
+          <Link key={course.id} href={"courses/" + course.id}>{course.name} {course.level}</Link>
         ))}
       </div>
     );
