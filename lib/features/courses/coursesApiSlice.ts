@@ -1,5 +1,5 @@
 import {createAppSlice} from "@/lib/createAppSlice";
-import {Course, fetchCourses} from "@/lib/features/courses/courseAPI";
+import {Course, fetchCourses, Participant} from "@/lib/features/courses/courseAPI";
 
 export interface CourseSliceState {
   courses: Course[];
@@ -33,6 +33,26 @@ export const coursesSlice = createAppSlice({
         },
       },
     ),
+    addParticipantForCourse: create.asyncThunk(
+      async (params: {userId: string, courseId: string}) => {
+
+        return {userId: params.userId, courseId: params.courseId};
+      },
+      {
+        pending: (state) => {
+          state.status = "loading";
+        },
+        fulfilled: (state, action) => {
+          state.status = "idle";
+
+          const participant = {id: '', _links: {user: { href: `/${action.payload.userId}`}}} as Participant;
+          state.courses.find(course => course.id == action.payload.courseId)?.participants.push(participant);
+        },
+        rejected: (state) => {
+          state.status = "failed";
+        },
+      },
+    ),
   }),
   selectors: {
     selectCourses: (state) => state.courses,
@@ -41,5 +61,5 @@ export const coursesSlice = createAppSlice({
   },
 });
 
-export const { loadCourses } = coursesSlice.actions;
+export const { loadCourses, addParticipantForCourse } = coursesSlice.actions;
 export const { selectCourses, selectStatus, selectCourse } = coursesSlice.selectors;

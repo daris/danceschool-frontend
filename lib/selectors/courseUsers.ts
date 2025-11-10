@@ -1,6 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import {selectCourse} from "@/lib/features/courses/coursesApiSlice";
 import {selectUsers} from "@/lib/features/users/usersApiSlice";
+import {extractIdFromUrl} from "@/lib/utils";
 
 export const selectCourseWithUsers = createSelector(
   [selectCourse, selectUsers],
@@ -8,11 +9,11 @@ export const selectCourseWithUsers = createSelector(
     if (!course) return null;
 
     const participantsWithUsers = course.participants.map((participant) => {
-      const userId = participant._links.user.href.split('/').pop();
+      const userId = extractIdFromUrl(participant._links.user.href);
       const user = users.find((u) => u.id === userId);
 
       const lessonAttendances = course.lessons.map(lesson => {
-        const attendacne = lesson.attendances.find(attendance => attendance._links.user.href.split('/').pop() == user?.id);
+        const attendacne = lesson.attendances.find(attendance => extractIdFromUrl(attendance._links.user.href) == user?.id);
         return {lesson, ...attendacne};
       })
 

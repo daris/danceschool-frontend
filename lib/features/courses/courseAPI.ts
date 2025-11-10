@@ -1,7 +1,10 @@
+export interface Link {
+  href: string;
+}
 
 export interface Attendance {
   status: string;
-  _links: any; // todo: typings
+  _links: { user: Link };
 }
 
 export interface Lesson {
@@ -13,7 +16,7 @@ export interface Lesson {
 
 export interface Participant {
   id: string;
-  _links: any; // todo: typings
+  _links: { user: Link };
 }
 
 export interface Course {

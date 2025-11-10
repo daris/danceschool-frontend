@@ -1,9 +1,9 @@
 "use client";
 import styles from "./Courses.module.css";
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
-import {loadCourses, selectCourse, selectStatus} from "@/lib/features/courses/coursesApiSlice";
+import {addParticipantForCourse, loadCourses, selectStatus} from "@/lib/features/courses/coursesApiSlice";
 import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {loadUsers} from "@/lib/features/users/usersApiSlice";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,17 +12,37 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import {selectAvailableParticipantsForCourse} from "@/lib/selectors/availableParticipantsForCourse";
+import TableFooter from "@mui/material/TableFooter";
+import Button from "@mui/material/Button";
+import {User} from "@/lib/features/users/usersAPI";
 
 export const Course = (props: {id: string}) => {
   const dispatch = useAppDispatch();
   const status = useAppSelector(selectStatus);
   const course = useAppSelector((state) => selectCourseWithUsers(state, props.id));
+  const availableParticipants = useAppSelector((state) => selectAvailableParticipantsForCourse(state, props.id));
+  const [selectedParticipant, setSelectedParticipant] = useState<User|null>(null);
 
   useEffect(() => {
     dispatch(loadCourses());
     dispatch(loadUsers());
   }, [dispatch]);
+
+  const handleAddParticipant = () => {
+    if (!selectedParticipant) return;
+
+    // Dispatch with parameters
+    dispatch(addParticipantForCourse({
+      courseId: props.id,
+      userId: selectedParticipant.id
+    }));
+
+    // Optionally clear selection
+    setSelectedParticipant(null);
+  };
 
   if (status == 'failed') {
     return (
@@ -68,6 +88,22 @@ export const Course = (props: {id: string}) => {
                 </TableRow>
               ))}
             </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  <Autocomplete
+                    disablePortal
+                    options={availableParticipants}
+                    getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
+                    sx={{ width: 300 }}
+                    value={selectedParticipant}
+                    onChange={(event, newValue) => setSelectedParticipant(newValue)}
+                    renderInput={(params) => <TextField {...params} label="Dodaj uczestnika" />}
+                  />
+                  <Button variant="text"  onClick={handleAddParticipant}>Dodaj</Button>
+                </TableCell>
+              </TableRow>
+            </TableFooter>
           </Table>
         </TableContainer>
       </div>
