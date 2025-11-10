@@ -44,7 +44,7 @@ export const Course = (props: {id: string}) => {
     return (
       <div className={styles.container}>
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
             <TableHead>
               <TableRow>
                 <TableCell>{course.name} {course.level}</TableCell>

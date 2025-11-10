@@ -1,12 +1,16 @@
 "use client";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import styles from "./Courses.module.css";
 import Link from "next/link";
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {loadCourses, selectCourses, selectStatus} from "@/lib/features/courses/coursesApiSlice";
 import {loadUsers} from "@/lib/features/users/usersApiSlice";
-
-const options = [5, 10, 20, 30];
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 export const Courses = () => {
   const dispatch = useAppDispatch();
@@ -37,9 +41,23 @@ export const Courses = () => {
   if (status == 'idle' && courses) {
     return (
       <div className={styles.container}>
-        {courses.map((course) => (
-          <Link key={course.id} href={"courses/" + course.id}>{course.name} {course.level}</Link>
-        ))}
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableBody>
+              {courses.map((course) => (
+                <TableRow
+                  key={course.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    <Link key={course.id} href={"courses/" + course.id}>{course.name} {course.level}</Link>
+
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
     );
   }
