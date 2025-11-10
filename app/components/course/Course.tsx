@@ -5,6 +5,14 @@ import {loadCourses, selectCourse, selectStatus} from "@/lib/features/courses/co
 import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
 import {useEffect} from "react";
 import {loadUsers} from "@/lib/features/users/usersApiSlice";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
 
 export const Course = (props: {id: string}) => {
   const dispatch = useAppDispatch();
@@ -35,28 +43,33 @@ export const Course = (props: {id: string}) => {
   if (status == 'idle' && course) {
     return (
       <div className={styles.container}>
-        <table>
-          <thead>
-            <tr>
-              <th>{course.name} {course.level}</th>
-              {course.lessons.map(lesson => (
-                <th key={lesson.id}>{lesson.startTime}</th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>
-            {course.participants.map(participant => (
-              <tr key={participant.id}>
-                <td>{participant.user?.firstName} {participant.user?.lastName}</td>
-                {participant.lessonAttendances.map(lessonAttendance => (
-                  <td key={lessonAttendance.lesson.id}>{lessonAttendance.status}</td>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>{course.name} {course.level}</TableCell>
+                {course.lessons.map(lesson => (
+                  <TableCell key={lesson.id}>{lesson.startTime}</TableCell>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-
-        </table>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {course.participants.map(participant => (
+                <TableRow
+                  key={participant.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {participant.user?.firstName} {participant.user?.lastName}
+                  </TableCell>
+                  {participant.lessonAttendances.map(lessonAttendance => (
+                    <TableCell key={lessonAttendance.lesson.id}>{lessonAttendance.status}</TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
     );
   }

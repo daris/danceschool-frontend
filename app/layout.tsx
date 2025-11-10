@@ -4,7 +4,11 @@ import { StoreProvider } from "./StoreProvider";
 import { Nav } from "./components/Nav";
 
 import "./styles/globals.css";
-import styles from "./styles/layout.module.css";
+import styles from "./styles/layout.module.css"
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
 interface Props {
   readonly children: ReactNode;
