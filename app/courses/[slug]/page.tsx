@@ -1,4 +1,4 @@
-import {Course} from "@/app/components/course/Course";
+import {CourseEditView} from "@/app/components/course/Course";
 
 export default async function CoursePage({params}: {
   params: Promise<{ slug: string }>
@@ -8,7 +8,7 @@ export default async function CoursePage({params}: {
   return (
     <>
       <h1>Course</h1>
-      <Course id={slug} />
+      <CourseEditView id={slug} />
     </>
   );
 }

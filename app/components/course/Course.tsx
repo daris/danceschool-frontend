@@ -1,7 +1,13 @@
 "use client";
 import styles from "./Courses.module.css";
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
-import {addParticipantForCourse, loadCourses, selectStatus} from "@/lib/features/courses/coursesApiSlice";
+import {
+  addParticipantForCourse,
+  loadCourses,
+  saveCourse,
+  selectCourse,
+  selectStatus
+} from "@/lib/features/courses/coursesApiSlice";
 import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
 import {useEffect, useState} from "react";
 import {loadUsers} from "@/lib/features/users/usersApiSlice";
@@ -18,11 +24,13 @@ import {selectAvailableParticipantsForCourse} from "@/lib/selectors/availablePar
 import TableFooter from "@mui/material/TableFooter";
 import Button from "@mui/material/Button";
 import {User} from "@/lib/features/users/usersAPI";
+import { Course } from "@/lib/features/courses/courseAPI";
 
-export const Course = (props: {id: string}) => {
+export const CourseEditView = (props: {id: string}) => {
   const dispatch = useAppDispatch();
   const status = useAppSelector(selectStatus);
-  const course = useAppSelector((state) => selectCourseWithUsers(state, props.id));
+  const course = useAppSelector((state) => selectCourse(state, props.id));
+  const courseWithUsers = useAppSelector((state) => selectCourseWithUsers(state, props.id));
   const availableParticipants = useAppSelector((state) => selectAvailableParticipantsForCourse(state, props.id));
   const [selectedParticipant, setSelectedParticipant] = useState<User|null>(null);
 
@@ -38,6 +46,16 @@ export const Course = (props: {id: string}) => {
     dispatch(addParticipantForCourse({
       courseId: props.id,
       userId: selectedParticipant.id
+    }));
+
+    // Optionally clear selection
+    setSelectedParticipant(null);
+  };
+
+
+  const handleSaveCourse = () => {
+    dispatch(saveCourse({
+      course: course as Course,
     }));
 
     // Optionally clear selection
@@ -60,21 +78,21 @@ export const Course = (props: {id: string}) => {
     );
   }
 
-  if (status == 'idle' && course) {
+  if (status == 'idle' && courseWithUsers) {
     return (
       <div className={styles.container}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
             <TableHead>
               <TableRow>
-                <TableCell>{course.name} {course.level}</TableCell>
-                {course.lessons.map(lesson => (
+                <TableCell>{courseWithUsers.name} {courseWithUsers.level}</TableCell>
+                {courseWithUsers.lessons.map(lesson => (
                   <TableCell key={lesson.id}>{lesson.startTime}</TableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {course.participants.map(participant => (
+              {courseWithUsers.participants.map(participant => (
                 <TableRow
                   key={participant.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -100,12 +118,14 @@ export const Course = (props: {id: string}) => {
                     onChange={(event, newValue) => setSelectedParticipant(newValue)}
                     renderInput={(params) => <TextField {...params} label="Dodaj uczestnika" />}
                   />
-                  <Button variant="text"  onClick={handleAddParticipant}>Dodaj</Button>
+                  <Button variant="text" onClick={handleAddParticipant}>Dodaj</Button>
                 </TableCell>
               </TableRow>
             </TableFooter>
           </Table>
         </TableContainer>
+        <Button variant="text"  onClick={handleSaveCourse}>Zapisz</Button>
+
       </div>
     );
   }
