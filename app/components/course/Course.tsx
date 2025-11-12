@@ -106,9 +106,9 @@ export const CourseEditView = (props: {id: string}) => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{position: 'relative'}}>
       {status == 'loading' &&
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%', position: 'absolute', zIndex: 100 }}>
           <LinearProgress />
         </Box>
       }
