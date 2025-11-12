@@ -25,8 +25,9 @@ import TableFooter from "@mui/material/TableFooter";
 import Button from "@mui/material/Button";
 import {User} from "@/lib/features/users/usersAPI";
 import { Course } from "@/lib/features/courses/courseAPI";
-import { Avatar, Box } from "@mui/material";
+import { Avatar, Box, Typography } from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
+import dayjs from "dayjs";
 
 export const CourseEditView = (props: {id: string}) => {
   const dispatch = useAppDispatch();
@@ -92,11 +93,7 @@ export const CourseEditView = (props: {id: string}) => {
             },
           }} stickyHeader aria-label="simple table">
             <TableHead>
-              <TableRow
-                // sx={{
-                //   '& th': { border: '1px solid rgba(224, 224, 224, 1)' },
-                // }}
-              >
+              <TableRow>
                 <TableCell
                   sx={{
                     position: 'sticky',
@@ -107,7 +104,12 @@ export const CourseEditView = (props: {id: string}) => {
                   }}
                 >{courseWithUsers.name} {courseWithUsers.level}</TableCell>
                 {courseWithUsers.lessons.map(lesson => (
-                  <TableCell key={lesson.id}>{lesson.startTime}</TableCell>
+                  <TableCell key={lesson.id} align="center">
+                    <Box>
+                      <Typography variant="caption">{dayjs(lesson.startTime).format("D.MM")}</Typography>
+                      <Typography>{dayjs(lesson.startTime).format("HH:mm")}</Typography>
+                    </Box>
+                  </TableCell>
                 ))}
               </TableRow>
             </TableHead>
@@ -115,9 +117,6 @@ export const CourseEditView = (props: {id: string}) => {
               {courseWithUsers.participants.map(participant => (
                 <TableRow
                   key={participant.id}
-                  // sx={{
-                  //   '& td': { border: '1px solid rgba(224, 224, 224, 1)' },
-                  // }}
                 >
                   <TableCell component="th" scope="row" sx={{
                     position: 'sticky',
@@ -136,7 +135,7 @@ export const CourseEditView = (props: {id: string}) => {
                     </Box>
                   </TableCell>
                   {participant.lessonAttendances.map(lessonAttendance => (
-                    <TableCell key={lessonAttendance.lesson.id}>{lessonAttendance.status}</TableCell>
+                    <TableCell key={lessonAttendance.lesson.id} align="center">{lessonAttendance.status}</TableCell>
                   ))}
                 </TableRow>
               ))}
