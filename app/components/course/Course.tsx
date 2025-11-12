@@ -9,7 +9,7 @@ import {
   selectStatus, setLessonAttendanceStatusForUser
 } from "@/lib/features/courses/coursesApiSlice";
 import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useRef, useState} from "react";
 import {loadUsers} from "@/lib/features/users/usersApiSlice";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -66,6 +66,28 @@ export const CourseEditView = (props: {id: string}) => {
     setSelectedParticipant(null);
   };
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollLeftRef = useRef(0); // store horizontal scroll position
+
+  const handleAttendanceStatusChange = (lessonId: string, userId: string, newStatus: AttendanceStatus) => {
+    if (containerRef.current) {
+      scrollLeftRef.current = containerRef.current.scrollLeft;
+    }
+
+    if (!course) return;
+    dispatch(
+      setLessonAttendanceStatusForUser({courseId: course.id, lessonId: lessonId, userId: userId, status: newStatus})
+    )
+  }
+
+  // Restore scroll position after render
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollLeft = scrollLeftRef.current;
+    }
+  }, [course]); // run whenever table data changes
+
+
   if (status == 'failed') {
     return (
       <div>
@@ -82,18 +104,12 @@ export const CourseEditView = (props: {id: string}) => {
     );
   }
 
-  const handleAttendanceStatusChange = (lessonId: string, userId: string, newStatus: AttendanceStatus) => {
-    if (!course) return;
-    dispatch(
-      setLessonAttendanceStatusForUser({courseId: course.id, lessonId: lessonId, userId: userId, status: newStatus})
-    )
-  }
-
   if (status == 'idle' && courseWithUsers) {
     return (
       <div className={styles.container}>
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} ref={containerRef}>
           <Table sx={{
+
             minWidth: 650,
             borderCollapse: 'collapse',
             '& th, & td': {
