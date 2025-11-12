@@ -1,11 +1,12 @@
 import {createAppSlice} from "@/lib/createAppSlice";
 import {
+  addParticipant,
   Attendance,
   AttendanceStatus,
   Course,
   fetchCourses,
   Lesson,
-  Participant,
+  Participant, updateAttendanceApi,
   updateCourse
 } from "@/lib/features/courses/courseAPI";
 
@@ -43,7 +44,7 @@ export const coursesSlice = createAppSlice({
     ),
     addParticipantForCourse: create.asyncThunk(
       async (params: {userId: string, courseId: string}) => {
-
+        await addParticipant(params.userId, params.courseId);
         return {userId: params.userId, courseId: params.courseId};
       },
       {
@@ -82,10 +83,11 @@ export const coursesSlice = createAppSlice({
         },
       },
     ),
-    setLessonAttendanceStatusForUser: create.asyncThunk(
-      async (params: {courseId: string, lessonId: string, userId: string, status: AttendanceStatus}) => {
+    updateAttendance: create.asyncThunk(
+      async (params: {attendance: Attendance, courseId: string}) => {
+        await updateAttendanceApi(params.attendance);
 
-        return {userId: params.userId, status: params.status, courseId: params.courseId, lessonId: params.lessonId};
+        return {attendance: params.attendance, courseId: params.courseId};
       },
       {
         pending: (state) => {
@@ -94,11 +96,11 @@ export const coursesSlice = createAppSlice({
         fulfilled: (state, action) => {
           state.status = "idle";
 
-          const attendance = {userId: action.payload.userId, status: action.payload.status} as Attendance;
+          const attendance = action.payload.attendance;
           const course = state.courses.find(course => course.id == action.payload.courseId);
-          const lesson = course?.lessons.find(lesson => lesson.id == action.payload.lessonId);
+          const lesson = course?.lessons.find(lesson => lesson.id == action.payload.attendance.lessonId);
           if (lesson) {
-            lesson.attendances = lesson.attendances.filter(l => l.userId != action.payload.userId);
+            lesson.attendances = lesson.attendances.filter(l => l.userId != action.payload.attendance.userId);
             lesson.attendances.push(attendance);
           }
         },
@@ -115,5 +117,5 @@ export const coursesSlice = createAppSlice({
   },
 });
 
-export const { loadCourses, addParticipantForCourse, saveCourse, setLessonAttendanceStatusForUser } = coursesSlice.actions;
+export const { loadCourses, addParticipantForCourse, saveCourse, updateAttendance } = coursesSlice.actions;
 export const { selectCourses, selectStatus, selectCourse } = coursesSlice.selectors;

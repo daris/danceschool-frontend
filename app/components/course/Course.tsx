@@ -6,7 +6,7 @@ import {
   loadCourses,
   saveCourse,
   selectCourse,
-  selectStatus, setLessonAttendanceStatusForUser
+  selectStatus, updateAttendance
 } from "@/lib/features/courses/coursesApiSlice";
 import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
 import React, {useEffect, useLayoutEffect, useRef, useState} from "react";
@@ -24,8 +24,12 @@ import {selectAvailableParticipantsForCourse} from "@/lib/selectors/availablePar
 import TableFooter from "@mui/material/TableFooter";
 import Button from "@mui/material/Button";
 import {User} from "@/lib/features/users/usersAPI";
-import {AttendanceStatus, Course, Lesson} from "@/lib/features/courses/courseAPI";
-import {Avatar, Box, Typography} from "@mui/material";
+import {
+  Attendance,
+  AttendanceStatus,
+  Course,
+} from "@/lib/features/courses/courseAPI";
+import {Avatar, Box, LinearProgress, Typography} from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
 import dayjs from "dayjs";
 import {AttendanceStatusSelector} from "@/app/components/attendanceStatus";
@@ -69,15 +73,20 @@ export const CourseEditView = (props: {id: string}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollLeftRef = useRef(0); // store horizontal scroll position
 
-  const handleAttendanceStatusChange = (lessonId: string, userId: string, newStatus: AttendanceStatus) => {
+  const handleAttendanceStatusChange = (attendance: Attendance|undefined, lessonId: string, userId: string, newStatus: AttendanceStatus) => {
     if (containerRef.current) {
       scrollLeftRef.current = containerRef.current.scrollLeft;
     }
 
     if (!course) return;
-    dispatch(
-      setLessonAttendanceStatusForUser({courseId: course.id, lessonId: lessonId, userId: userId, status: newStatus})
-    )
+
+    let attendanceData;
+    
+    if (!attendance) {
+      attendanceData = {userId: userId, status: newStatus, user: `/users/${userId}`, lesson: `/lessons/${lessonId}`};
+    } else {
+      dispatch(updateAttendance({attendance: {...attendance, status: newStatus}, courseId: course.id}));
+    }
   }
 
   // Restore scroll position after render
@@ -96,26 +105,23 @@ export const CourseEditView = (props: {id: string}) => {
     );
   }
 
-  if (status == 'loading') {
-    return (
-      <div>
-        <h1>Loading...</h1>
-      </div>
-    );
-  }
+  return (
+    <div className={styles.container}>
+      {status == 'loading' &&
+        <Box sx={{ width: '100%' }}>
+          <LinearProgress />
+        </Box>
+      }
+      <TableContainer component={Paper} ref={containerRef}>
+        <Table sx={{
 
-  if (status == 'idle' && courseWithUsers) {
-    return (
-      <div className={styles.container}>
-        <TableContainer component={Paper} ref={containerRef}>
-          <Table sx={{
-
-            minWidth: 650,
-            borderCollapse: 'collapse',
-            '& th, & td': {
-              border: '1px solid rgba(224, 224, 224, 1)',
-            },
-          }} stickyHeader aria-label="simple table">
+          minWidth: 650,
+          borderCollapse: 'collapse',
+          '& th, & td': {
+            border: '1px solid rgba(224, 224, 224, 1)',
+          },
+        }} stickyHeader aria-label="simple table">
+          {courseWithUsers &&
             <TableHead>
               <TableRow>
                 <TableCell
@@ -137,40 +143,12 @@ export const CourseEditView = (props: {id: string}) => {
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody>
-              {courseWithUsers.participants.map(participant => (
-                <TableRow
-                  key={participant.id}
-                >
-                  <TableCell component="th" scope="row" sx={{
-                    position: 'sticky',
-                    left: 0,
-                    background: '#fff',
-                    zIndex: 2,
-                    borderRight: '1px solid rgba(224, 224, 224, 1)',
-                  }}>
-                    <Box sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      '& > div': { mr: 1, flexShrink: 0 }
-                    }}>
-                      <Avatar {...stringAvatar(`${participant.user?.firstName} ${participant.user?.lastName}`)} />&nbsp;
-                      {participant.user?.firstName} {participant.user?.lastName}
-                    </Box>
-                  </TableCell>
-                  {participant.lessonAttendances.map(lessonAttendance => (
-                    <TableCell key={lessonAttendance.lesson.id} align="center">
-                      <AttendanceStatusSelector
-                        status={lessonAttendance.status}
-                        onStatusChange={(newStatus) => handleAttendanceStatusChange(lessonAttendance.lesson.id, participant.userId, newStatus)}
-                        ></AttendanceStatusSelector>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
+          }
+          <TableBody>
+            {courseWithUsers && courseWithUsers.participants.map(participant => (
+              <TableRow
+                key={participant.id}
+              >
                 <TableCell component="th" scope="row" sx={{
                   position: 'sticky',
                   left: 0,
@@ -178,40 +156,66 @@ export const CourseEditView = (props: {id: string}) => {
                   zIndex: 2,
                   borderRight: '1px solid rgba(224, 224, 224, 1)',
                 }}>
-                  <Autocomplete
-                    disablePortal
-                    options={availableParticipants}
-                    getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
-                    sx={{ width: 300 }}
-                    value={selectedParticipant}
-                    onChange={(event, newValue) => setSelectedParticipant(newValue)}
-                    renderInput={(params) => <TextField {...params} label="Dodaj uczestnika" />}
-                    renderOption={(props, option) => {
-                      const { key, ...optionProps } = props;
-                      return (
-                        <Box
-                          key={key}
-                          component="li"
-                          sx={{ '& > Avatar': { mr: 2, flexShrink: 0 } }}
-                          {...optionProps}
-                        >
-                          <Avatar {...stringAvatar(`${option.firstName} ${option.lastName}`)} />&nbsp;
-                          {option.firstName} {option.lastName}
-                        </Box>
-                      );
-                    }}
-                  />
-                  <Button variant="text" onClick={handleAddParticipant}>Dodaj</Button>
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    '& > div': { mr: 1, flexShrink: 0 }
+                  }}>
+                    <Avatar {...stringAvatar(`${participant.user?.firstName} ${participant.user?.lastName}`)} />&nbsp;
+                    {participant.user?.firstName} {participant.user?.lastName}
+                  </Box>
                 </TableCell>
+                {participant.lessonAttendances.map(lessonAttendance => (
+                  <TableCell key={lessonAttendance.lesson.id} align="center">
+                    <AttendanceStatusSelector
+                      status={lessonAttendance.attendance?.status}
+                      onStatusChange={(newStatus) => handleAttendanceStatusChange(lessonAttendance.attendance, lessonAttendance.lesson.id, participant.userId, newStatus)}
+                      ></AttendanceStatusSelector>
+                  </TableCell>
+                ))}
               </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
-        <Button variant="text" onClick={handleSaveCourse}>Zapisz</Button>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell component="th" scope="row" sx={{
+                position: 'sticky',
+                left: 0,
+                background: '#fff',
+                zIndex: 2,
+                borderRight: '1px solid rgba(224, 224, 224, 1)',
+              }}>
+                <Autocomplete
+                  disablePortal
+                  options={availableParticipants}
+                  getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
+                  sx={{ width: 300 }}
+                  value={selectedParticipant}
+                  onChange={(event, newValue) => setSelectedParticipant(newValue)}
+                  renderInput={(params) => <TextField {...params} label="Dodaj uczestnika" />}
+                  renderOption={(props, option) => {
+                    const { key, ...optionProps } = props;
+                    return (
+                      <Box
+                        key={key}
+                        component="li"
+                        sx={{ '& > Avatar': { mr: 2, flexShrink: 0 } }}
+                        {...optionProps}
+                      >
+                        <Avatar {...stringAvatar(`${option.firstName} ${option.lastName}`)} />&nbsp;
+                        {option.firstName} {option.lastName}
+                      </Box>
+                    );
+                  }}
+                />
+                <Button variant="text" onClick={handleAddParticipant}>Dodaj</Button>
+              </TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+      <Button variant="text" onClick={handleSaveCourse}>Zapisz</Button>
 
-      </div>
-    );
-  }
-
-  return null;
+    </div>
+  );
 };

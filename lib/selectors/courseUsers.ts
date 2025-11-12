@@ -11,8 +11,8 @@ export const selectCourseWithUsers = createSelector(
       const user = users.find((u) => u.id === participant.userId);
 
       const lessonAttendances = course.lessons.map(lesson => {
-        const attendacne = lesson.attendances.find(attendance => attendance.userId == user?.id);
-        return {lesson, ...attendacne};
+        const attendance = lesson.attendances.find(attendance => attendance.userId == user?.id);
+        return {lesson, attendance};
       })
 
       return { ...participant, user, lessonAttendances };
