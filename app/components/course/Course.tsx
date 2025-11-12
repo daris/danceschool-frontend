@@ -84,10 +84,28 @@ export const CourseEditView = (props: {id: string}) => {
     return (
       <div className={styles.container}>
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table sx={{
+            minWidth: 650,
+            borderCollapse: 'collapse',
+            '& th, & td': {
+              border: '1px solid rgba(224, 224, 224, 1)',
+            },
+          }} stickyHeader aria-label="simple table">
             <TableHead>
-              <TableRow>
-                <TableCell>{courseWithUsers.name} {courseWithUsers.level}</TableCell>
+              <TableRow
+                // sx={{
+                //   '& th': { border: '1px solid rgba(224, 224, 224, 1)' },
+                // }}
+              >
+                <TableCell
+                  sx={{
+                    position: 'sticky',
+                    left: 0,
+                    background: '#fff',
+                    zIndex: 3,
+                    borderRight: '1px solid rgba(224, 224, 224, 1)',
+                  }}
+                >{courseWithUsers.name} {courseWithUsers.level}</TableCell>
                 {courseWithUsers.lessons.map(lesson => (
                   <TableCell key={lesson.id}>{lesson.startTime}</TableCell>
                 ))}
@@ -97,9 +115,17 @@ export const CourseEditView = (props: {id: string}) => {
               {courseWithUsers.participants.map(participant => (
                 <TableRow
                   key={participant.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  // sx={{
+                  //   '& td': { border: '1px solid rgba(224, 224, 224, 1)' },
+                  // }}
                 >
-                  <TableCell component="th" scope="row">
+                  <TableCell component="th" scope="row" sx={{
+                    position: 'sticky',
+                    left: 0,
+                    background: '#fff',
+                    zIndex: 2,
+                    borderRight: '1px solid rgba(224, 224, 224, 1)',
+                  }}>
                     <Box sx={{
                       display: 'flex',
                       alignItems: 'center',
@@ -117,7 +143,13 @@ export const CourseEditView = (props: {id: string}) => {
             </TableBody>
             <TableFooter>
               <TableRow>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" sx={{
+                  position: 'sticky',
+                  left: 0,
+                  background: '#fff',
+                  zIndex: 2,
+                  borderRight: '1px solid rgba(224, 224, 224, 1)',
+                }}>
                   <Autocomplete
                     disablePortal
                     options={availableParticipants}
