@@ -9,7 +9,7 @@ import {
   selectStatus
 } from "@/lib/features/courses/coursesApiSlice";
 import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {loadUsers} from "@/lib/features/users/usersApiSlice";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -24,12 +24,10 @@ import {selectAvailableParticipantsForCourse} from "@/lib/selectors/availablePar
 import TableFooter from "@mui/material/TableFooter";
 import Button from "@mui/material/Button";
 import {User} from "@/lib/features/users/usersAPI";
-import { Course } from "@/lib/features/courses/courseAPI";
-import { Avatar, Box, Tooltip, Typography } from "@mui/material";
+import {Course} from "@/lib/features/courses/courseAPI";
+import {Avatar, Box, Typography} from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
 import dayjs from "dayjs";
-import { green } from "@mui/material/colors";
-import CheckIcon from '@mui/icons-material/Check';
 import {AttendanceStatusSelector} from "@/app/components/attendanceStatus";
 
 export const CourseEditView = (props: {id: string}) => {
@@ -66,6 +64,15 @@ export const CourseEditView = (props: {id: string}) => {
 
     // Optionally clear selection
     setSelectedParticipant(null);
+  };
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleAttendanceStatusClick = (event: React.MouseEvent<HTMLDivElement|HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   if (status == 'failed') {
@@ -139,7 +146,9 @@ export const CourseEditView = (props: {id: string}) => {
                   </TableCell>
                   {participant.lessonAttendances.map(lessonAttendance => (
                     <TableCell key={lessonAttendance.lesson.id} align="center">
-                      <AttendanceStatusSelector status={lessonAttendance.status}></AttendanceStatusSelector>
+                      <AttendanceStatusSelector
+                        status={lessonAttendance.status}
+                        ></AttendanceStatusSelector>
                     </TableCell>
                   ))}
                 </TableRow>
@@ -183,7 +192,7 @@ export const CourseEditView = (props: {id: string}) => {
             </TableFooter>
           </Table>
         </TableContainer>
-        <Button variant="text"  onClick={handleSaveCourse}>Zapisz</Button>
+        <Button variant="text" onClick={handleSaveCourse}>Zapisz</Button>
 
       </div>
     );

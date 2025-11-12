@@ -1,60 +1,76 @@
 import {green, red} from "@mui/material/colors";
-import {Box, Tooltip} from "@mui/material";
+import {Box, BoxProps, Menu, MenuItem, SxProps, Tooltip} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import {AttendanceStatus} from "@/lib/features/courses/courseAPI";
+import React, {useState} from "react";
 
-export const AttendanceStatusSelector = (props: {status: AttendanceStatus|undefined}) => {
-  const status = props.status;
+interface AttendanceStatusSelectorProps extends BoxProps {
+  status?: AttendanceStatus;
+  onStatusChange?: (newStatus: AttendanceStatus) => void;
+}
 
-  const commonBoxStyles = {
-    borderRadius: 3,
-    cursor: 'pointer',
-    width: 32,
-    height: 32,
-    margin: '0 auto',
-  }
+export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> = ({status, onStatusChange, ...props}) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSelect = (newStatus: AttendanceStatus) => {
+    onStatusChange?.(newStatus);
+    handleClose();
+  };
+
+  let statusProps: SxProps = {
+    backgroundColor: '#fff',
+    border: '1px solid rgba(224, 224, 224, 1)',
+    color: green[800],
+  };
+  let icon = null;
 
   if (status == AttendanceStatus.NORMAL) {
-    return (
-      <Tooltip title={status}>
-        <Box sx={{
-          ...commonBoxStyles,
-          backgroundColor: green[50],
-          border: '1px solid ' + green[100],
-          color: green[800],
-        }}>
-          <CheckIcon></CheckIcon>
-        </Box>
-      </Tooltip>
-    );
+    statusProps = {
+      backgroundColor: green[50],
+      border: '1px solid ' + green[100],
+      color: green[800],
+    };
+    icon = <CheckIcon></CheckIcon>;
+  } else if (status == AttendanceStatus.FULL_PASS) {
+    statusProps = {
+      backgroundColor: red[50],
+      border: '1px solid ' + red[100],
+      color: red[800],
+    }
+    icon = <CheckIcon></CheckIcon>;
   }
 
-
-  if (status == AttendanceStatus.FULL_PASS) {
-    return (
-      <Tooltip title={status}>
-        <Box sx={{
-          ...commonBoxStyles,
-          backgroundColor: red[50],
-          border: '1px solid ' + red[100],
-          color: red[800],
-        }}>
-            <CheckIcon></CheckIcon>
-        </Box>
-      </Tooltip>
-    );
-  }
 
   return (
-    <Tooltip title="Click to select status">
-      <Box sx={{
-        ...commonBoxStyles,
-        backgroundColor: '#fff',
-        border: '1px solid rgba(224, 224, 224, 1)',
-        color: green[800],
-      }}>
-      </Box>
-    </Tooltip>
-
+    <>
+      <Tooltip title={status}>
+        <Box sx={{
+          ...props,
+          borderRadius: 3,
+          cursor: 'pointer',
+          width: 32,
+          height: 32,
+          margin: '0 auto',
+          ...statusProps,
+        }}
+         onClick={handleOpen}
+        >
+          {icon}
+        </Box>
+      </Tooltip>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+        <MenuItem onClick={() => handleSelect(AttendanceStatus.NORMAL)}>Normal</MenuItem>
+        <MenuItem onClick={() => handleSelect(AttendanceStatus.FULL_PASS)}>Full pass</MenuItem>
+        <MenuItem onClick={() => handleSelect(AttendanceStatus.RESCHEDULED)}>Rescheduled</MenuItem>
+      </Menu>
+    </>
   );
 };
