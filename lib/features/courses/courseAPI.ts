@@ -6,7 +6,7 @@ export enum AttendanceStatus {
 
 export interface Attendance {
   id: string;
-  status: AttendanceStatus;
+  status: AttendanceStatus|null;
   userId: string;
   lessonId: string;
 }
@@ -75,6 +75,16 @@ export const updateAttendanceApi = async (attendance: Attendance) => {
   const response = await fetch("http://localhost:8080/attendances/" + attendance.id, {
     headers: { "Content-Type": "application/json" },
     method: "PUT",
+    body: JSON.stringify({user: `/users/${attendance.userId}`, lesson: `/lessons/${attendance.lessonId}`, status: attendance.status})
+  });
+  const result: Course = await response.json();
+  return result;
+};
+
+export const createAttendanceApi = async (attendance: Attendance) => {
+  const response = await fetch("http://localhost:8080/attendances", {
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
     body: JSON.stringify({user: `/users/${attendance.userId}`, lesson: `/lessons/${attendance.lessonId}`, status: attendance.status})
   });
   const result: Course = await response.json();

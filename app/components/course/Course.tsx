@@ -2,7 +2,7 @@
 import styles from "./Courses.module.css";
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {
-  addParticipantForCourse,
+  addParticipantForCourse, createAttendance,
   loadCourses,
   saveCourse,
   selectCourse,
@@ -73,17 +73,15 @@ export const CourseEditView = (props: {id: string}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollLeftRef = useRef(0); // store horizontal scroll position
 
-  const handleAttendanceStatusChange = (attendance: Attendance|undefined, lessonId: string, userId: string, newStatus: AttendanceStatus) => {
+  const handleAttendanceStatusChange = (attendance: Attendance|undefined, lessonId: string, userId: string, newStatus: AttendanceStatus|null) => {
     if (containerRef.current) {
       scrollLeftRef.current = containerRef.current.scrollLeft;
     }
 
     if (!course) return;
 
-    let attendanceData;
-    
     if (!attendance) {
-      attendanceData = {userId: userId, status: newStatus, user: `/users/${userId}`, lesson: `/lessons/${lessonId}`};
+      dispatch(createAttendance({attendance: {lessonId: lessonId, userId: userId, status: newStatus} as Attendance, courseId: course.id}));
     } else {
       dispatch(updateAttendance({attendance: {...attendance, status: newStatus}, courseId: course.id}));
     }

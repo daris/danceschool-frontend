@@ -5,8 +5,8 @@ import {AttendanceStatus} from "@/lib/features/courses/courseAPI";
 import React, {useState} from "react";
 
 interface AttendanceStatusSelectorProps extends BoxProps {
-  status?: AttendanceStatus;
-  onStatusChange?: (newStatus: AttendanceStatus) => void;
+  status?: AttendanceStatus|null;
+  onStatusChange?: (newStatus: AttendanceStatus|null) => void;
 }
 
 export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> = ({status, onStatusChange, ...props}) => {
@@ -20,7 +20,7 @@ export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> =
     setAnchorEl(null);
   };
 
-  const handleSelect = (newStatus: AttendanceStatus) => {
+  const handleSelect = (newStatus: AttendanceStatus|null) => {
     onStatusChange?.(newStatus);
     handleClose();
   };
@@ -77,6 +77,7 @@ export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> =
         <MenuItem onClick={() => handleSelect(AttendanceStatus.NORMAL)}>Normal</MenuItem>
         <MenuItem onClick={() => handleSelect(AttendanceStatus.FULL_PASS)}>Full pass</MenuItem>
         <MenuItem onClick={() => handleSelect(AttendanceStatus.RESCHEDULED)}>Rescheduled</MenuItem>
+        <MenuItem onClick={() => handleSelect(null)}>Reset</MenuItem>
       </Menu>
     </>
   );

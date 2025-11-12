@@ -3,7 +3,7 @@ import {
   addParticipant,
   Attendance,
   AttendanceStatus,
-  Course,
+  Course, createAttendanceApi,
   fetchCourses,
   Lesson,
   Participant, updateAttendanceApi,
@@ -109,6 +109,31 @@ export const coursesSlice = createAppSlice({
         },
       },
     ),
+    createAttendance: create.asyncThunk(
+      async (params: {attendance: Attendance, courseId: string}) => {
+        await createAttendanceApi(params.attendance);
+
+        return {attendance: params.attendance, courseId: params.courseId};
+      },
+      {
+        pending: (state) => {
+          state.status = "loading";
+        },
+        fulfilled: (state, action) => {
+          state.status = "idle";
+
+          const attendance = action.payload.attendance;
+          const course = state.courses.find(course => course.id == action.payload.courseId);
+          const lesson = course?.lessons.find(lesson => lesson.id == action.payload.attendance.lessonId);
+          if (lesson) {
+            lesson.attendances.push(attendance);
+          }
+        },
+        rejected: (state) => {
+          state.status = "failed";
+        },
+      },
+    ),
   }),
   selectors: {
     selectCourses: (state) => state.courses,
@@ -117,5 +142,5 @@ export const coursesSlice = createAppSlice({
   },
 });
 
-export const { loadCourses, addParticipantForCourse, saveCourse, updateAttendance } = coursesSlice.actions;
+export const { loadCourses, addParticipantForCourse, saveCourse, updateAttendance, createAttendance } = coursesSlice.actions;
 export const { selectCourses, selectStatus, selectCourse } = coursesSlice.selectors;
