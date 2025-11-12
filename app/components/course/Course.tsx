@@ -151,7 +151,10 @@ export const CourseEditView = (props: {id: string}) => {
                   </Box>
                 </TableCell>
                 {participant.lessonAttendances.map(lessonAttendance => (
-                  <TableCell key={lessonAttendance.lesson.id} align="center">
+                  <TableCell key={lessonAttendance.lesson.id} align="center"
+                    sx={{
+                      backgroundColor: participant.user?.passes.find(p => course && dayjs(p.startTime).isBefore(lessonAttendance.lesson.startTime) && dayjs(p.endTime).isAfter(lessonAttendance.lesson.startTime) && p.courseIds.includes(course.id)) ? '#f0f0f0' : '#fff'
+                    }}>
                     <AttendanceStatusSelector
                       status={lessonAttendance.attendance?.status}
                       onStatusChange={(newStatus) => handleAttendanceStatusChange(lessonAttendance.attendance, lessonAttendance.lesson.id, participant.userId, newStatus)}
