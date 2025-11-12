@@ -1,4 +1,4 @@
-import {green, red} from "@mui/material/colors";
+import {green, red, yellow} from "@mui/material/colors";
 import {Box, BoxProps, Menu, MenuItem, SxProps, Tooltip} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import {AttendanceStatus} from "@/lib/features/courses/courseAPI";
@@ -44,6 +44,13 @@ export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> =
       backgroundColor: red[50],
       border: '1px solid ' + red[100],
       color: red[800],
+    }
+    icon = <CheckIcon></CheckIcon>;
+  } else if (status == AttendanceStatus.RESCHEDULED) {
+    statusProps = {
+      backgroundColor: yellow[50],
+      border: '1px solid ' + yellow[100],
+      color: yellow[800],
     }
     icon = <CheckIcon></CheckIcon>;
   }

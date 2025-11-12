@@ -6,7 +6,7 @@ import {
   loadCourses,
   saveCourse,
   selectCourse,
-  selectStatus
+  selectStatus, setLessonAttendanceStatusForUser
 } from "@/lib/features/courses/coursesApiSlice";
 import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
 import React, {useEffect, useState} from "react";
@@ -24,7 +24,7 @@ import {selectAvailableParticipantsForCourse} from "@/lib/selectors/availablePar
 import TableFooter from "@mui/material/TableFooter";
 import Button from "@mui/material/Button";
 import {User} from "@/lib/features/users/usersAPI";
-import {Course} from "@/lib/features/courses/courseAPI";
+import {AttendanceStatus, Course, Lesson} from "@/lib/features/courses/courseAPI";
 import {Avatar, Box, Typography} from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
 import dayjs from "dayjs";
@@ -66,15 +66,6 @@ export const CourseEditView = (props: {id: string}) => {
     setSelectedParticipant(null);
   };
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleAttendanceStatusClick = (event: React.MouseEvent<HTMLDivElement|HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   if (status == 'failed') {
     return (
       <div>
@@ -89,6 +80,13 @@ export const CourseEditView = (props: {id: string}) => {
         <h1>Loading...</h1>
       </div>
     );
+  }
+
+  const handleAttendanceStatusChange = (lessonId: string, userId: string, newStatus: AttendanceStatus) => {
+    if (!course) return;
+    dispatch(
+      setLessonAttendanceStatusForUser({courseId: course.id, lessonId: lessonId, userId: userId, status: newStatus})
+    )
   }
 
   if (status == 'idle' && courseWithUsers) {
@@ -148,6 +146,7 @@ export const CourseEditView = (props: {id: string}) => {
                     <TableCell key={lessonAttendance.lesson.id} align="center">
                       <AttendanceStatusSelector
                         status={lessonAttendance.status}
+                        onStatusChange={(newStatus) => handleAttendanceStatusChange(lessonAttendance.lesson.id, participant.userId, newStatus)}
                         ></AttendanceStatusSelector>
                     </TableCell>
                   ))}

@@ -1,5 +1,13 @@
 import {createAppSlice} from "@/lib/createAppSlice";
-import {Course, fetchCourses, Participant, updateCourse} from "@/lib/features/courses/courseAPI";
+import {
+  Attendance,
+  AttendanceStatus,
+  Course,
+  fetchCourses,
+  Lesson,
+  Participant,
+  updateCourse
+} from "@/lib/features/courses/courseAPI";
 
 export interface CourseSliceState {
   courses: Course[];
@@ -74,6 +82,31 @@ export const coursesSlice = createAppSlice({
         },
       },
     ),
+    setLessonAttendanceStatusForUser: create.asyncThunk(
+      async (params: {courseId: string, lessonId: string, userId: string, status: AttendanceStatus}) => {
+
+        return {userId: params.userId, status: params.status, courseId: params.courseId, lessonId: params.lessonId};
+      },
+      {
+        pending: (state) => {
+          state.status = "loading";
+        },
+        fulfilled: (state, action) => {
+          state.status = "idle";
+
+          const attendance = {userId: action.payload.userId, status: action.payload.status} as Attendance;
+          const course = state.courses.find(course => course.id == action.payload.courseId);
+          const lesson = course?.lessons.find(lesson => lesson.id == action.payload.lessonId);
+          if (lesson) {
+            lesson.attendances = lesson.attendances.filter(l => l.userId != action.payload.userId);
+            lesson.attendances.push(attendance);
+          }
+        },
+        rejected: (state) => {
+          state.status = "failed";
+        },
+      },
+    ),
   }),
   selectors: {
     selectCourses: (state) => state.courses,
@@ -82,5 +115,5 @@ export const coursesSlice = createAppSlice({
   },
 });
 
-export const { loadCourses, addParticipantForCourse, saveCourse } = coursesSlice.actions;
+export const { loadCourses, addParticipantForCourse, saveCourse, setLessonAttendanceStatusForUser } = coursesSlice.actions;
 export const { selectCourses, selectStatus, selectCourse } = coursesSlice.selectors;
