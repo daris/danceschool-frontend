@@ -2,12 +2,11 @@ import {createAppSlice} from "@/lib/createAppSlice";
 import {
   addParticipant,
   Attendance,
-  AttendanceStatus,
-  Course, createAttendanceApi,
+  Course,
+  createAttendanceApi,
   fetchCourses,
-  Lesson,
-  Participant, updateAttendanceApi,
-  updateCourse
+  Participant,
+  updateAttendanceApi
 } from "@/lib/features/courses/courseAPI";
 
 export interface CourseSliceState {
@@ -56,27 +55,6 @@ export const coursesSlice = createAppSlice({
 
           const participant = {id: '', userId: action.payload.userId} as Participant;
           state.courses.find(course => course.id == action.payload.courseId)?.participants.push(participant);
-        },
-        rejected: (state) => {
-          state.status = "failed";
-        },
-      },
-    ),
-    saveCourse: create.asyncThunk(
-      async (params: {course: Course}) => {
-        const course: Course = await updateCourse(params.course);
-        return {course: course};
-      },
-      {
-        pending: (state) => {
-          state.status = "loading";
-        },
-        fulfilled: (state, action) => {
-          state.status = "idle";
-
-          state.courses = state.courses.map(course =>
-            course.id === action.payload.course.id ? action.payload.course : course
-          );
         },
         rejected: (state) => {
           state.status = "failed";
@@ -142,5 +120,5 @@ export const coursesSlice = createAppSlice({
   },
 });
 
-export const { loadCourses, addParticipantForCourse, saveCourse, updateAttendance, createAttendance } = coursesSlice.actions;
+export const { loadCourses, addParticipantForCourse, updateAttendance, createAttendance } = coursesSlice.actions;
 export const { selectCourses, selectStatus, selectCourse } = coursesSlice.selectors;

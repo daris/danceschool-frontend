@@ -61,16 +61,6 @@ export const addParticipant = async (userId: string, courseId: string) => {
   return result;
 };
 
-export const updateCourse = async (course: Course) => {
-  const response = await fetch("http://localhost:8080/courses/" + course.id, {
-    headers: { "Content-Type": "application/json" },
-    method: "PUT",
-    body: JSON.stringify(course)
-  });
-  const result: Course = await response.json();
-  return result;
-};
-
 export const updateAttendanceApi = async (attendance: Attendance) => {
   const response = await fetch("http://localhost:8080/attendances/" + attendance.id, {
     headers: { "Content-Type": "application/json" },

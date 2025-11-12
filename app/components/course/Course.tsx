@@ -2,11 +2,12 @@
 import styles from "./Courses.module.css";
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {
-  addParticipantForCourse, createAttendance,
+  addParticipantForCourse,
+  createAttendance,
   loadCourses,
-  saveCourse,
   selectCourse,
-  selectStatus, updateAttendance
+  selectStatus,
+  updateAttendance
 } from "@/lib/features/courses/coursesApiSlice";
 import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
 import React, {useEffect, useLayoutEffect, useRef, useState} from "react";
@@ -24,11 +25,7 @@ import {selectAvailableParticipantsForCourse} from "@/lib/selectors/availablePar
 import TableFooter from "@mui/material/TableFooter";
 import Button from "@mui/material/Button";
 import {User} from "@/lib/features/users/usersAPI";
-import {
-  Attendance,
-  AttendanceStatus,
-  Course,
-} from "@/lib/features/courses/courseAPI";
+import {Attendance, AttendanceStatus,} from "@/lib/features/courses/courseAPI";
 import {Avatar, Box, LinearProgress, Typography} from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
 import dayjs from "dayjs";
@@ -54,16 +51,6 @@ export const CourseEditView = (props: {id: string}) => {
     dispatch(addParticipantForCourse({
       courseId: props.id,
       userId: selectedParticipant.id
-    }));
-
-    // Optionally clear selection
-    setSelectedParticipant(null);
-  };
-
-
-  const handleSaveCourse = () => {
-    dispatch(saveCourse({
-      course: course as Course,
     }));
 
     // Optionally clear selection
@@ -212,8 +199,6 @@ export const CourseEditView = (props: {id: string}) => {
           </TableFooter>
         </Table>
       </TableContainer>
-      <Button variant="text" onClick={handleSaveCourse}>Zapisz</Button>
-
     </div>
   );
 };
