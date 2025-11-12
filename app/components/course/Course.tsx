@@ -30,6 +30,7 @@ import {stringAvatar} from "@/lib/avatar";
 import dayjs from "dayjs";
 import { green } from "@mui/material/colors";
 import CheckIcon from '@mui/icons-material/Check';
+import {AttendanceStatusSelector} from "@/app/components/attendanceStatus";
 
 export const CourseEditView = (props: {id: string}) => {
   const dispatch = useAppDispatch();
@@ -138,20 +139,7 @@ export const CourseEditView = (props: {id: string}) => {
                   </TableCell>
                   {participant.lessonAttendances.map(lessonAttendance => (
                     <TableCell key={lessonAttendance.lesson.id} align="center">
-                      <Box sx={{
-                        backgroundColor: green['A100'],
-                        border: '1px solid ' + green[200],
-                        color: green[800],
-                        borderRadius: 3,
-                        cursor: 'pointer',
-                        width: 32,
-                        height: 32,
-                        margin: '0 auto',
-                      }}>
-                        <Tooltip title={lessonAttendance.status}>
-                          <CheckIcon></CheckIcon>
-                        </Tooltip>
-                      </Box>
+                      <AttendanceStatusSelector status={lessonAttendance.status}></AttendanceStatusSelector>
                     </TableCell>
                   ))}
                 </TableRow>

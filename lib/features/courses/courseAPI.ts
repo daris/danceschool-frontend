@@ -1,15 +1,11 @@
-export interface Link {
-  href: string;
-}
-
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
+export enum AttendanceStatus {
+  NORMAL = 'NORMAL',
+  FULL_PASS = 'FULL_PASS',
+  RESCHEDULED = 'RESCHEDULED',
 }
 
 export interface Attendance {
-  status: string;
+  status: AttendanceStatus;
   userId: string;
 }
 
