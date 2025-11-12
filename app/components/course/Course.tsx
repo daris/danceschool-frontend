@@ -84,7 +84,7 @@ export const CourseEditView = (props: {id: string}) => {
     return (
       <div className={styles.container}>
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>{courseWithUsers.name} {courseWithUsers.level}</TableCell>
@@ -100,7 +100,11 @@ export const CourseEditView = (props: {id: string}) => {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    <Box sx={{ '& > div': { mr: 2, flexShrink: 0 } }}>
+                    <Box sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      '& > div': { mr: 1, flexShrink: 0 }
+                    }}>
                       <Avatar {...stringAvatar(`${participant.user?.firstName} ${participant.user?.lastName}`)} />&nbsp;
                       {participant.user?.firstName} {participant.user?.lastName}
                     </Box>

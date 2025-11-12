@@ -22,6 +22,8 @@ export function stringToColor(string: string) {
 export function stringAvatar(name: string) {
   return {
     sx: {
+      width: 32,
+      height: 32,
       bgcolor: stringToColor(name),
     },
     children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
