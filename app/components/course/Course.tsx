@@ -117,7 +117,9 @@ export const CourseEditView = (props: {id: string}) => {
                     zIndex: 3,
                     borderRight: '1px solid rgba(224, 224, 224, 1)',
                   }}
-                >{courseWithUsers.name} {courseWithUsers.level}</TableCell>
+                >
+                  {courseWithUsers.name} {courseWithUsers.level}
+                </TableCell>
                 {courseWithUsers.lessons.map(lesson => (
                   <TableCell key={lesson.id} align="center">
                     <Box>
@@ -130,39 +132,50 @@ export const CourseEditView = (props: {id: string}) => {
             </TableHead>
           }
           <TableBody>
-            {courseWithUsers && courseWithUsers.participants.map(participant => (
-              <TableRow
-                key={participant.id}
-              >
-                <TableCell component="th" scope="row" sx={{
-                  position: 'sticky',
-                  left: 0,
-                  background: '#fff',
-                  zIndex: 2,
-                  borderRight: '1px solid rgba(224, 224, 224, 1)',
-                }}>
-                  <Box sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    '& > div': { mr: 1, flexShrink: 0 }
+            {courseWithUsers && courseWithUsers.participants.map(participant => {
+              const user = participant.user;
+              const lastPass = user?.passes[user.passes.length - 1];
+
+              return (
+                <TableRow
+                  key={participant.id}
+                >
+                  <TableCell component="th" scope="row" sx={{
+                    position: 'sticky',
+                    left: 0,
+                    background: '#fff',
+                    zIndex: 2,
+                    borderRight: '1px solid rgba(224, 224, 224, 1)',
                   }}>
-                    <Avatar {...stringAvatar(`${participant.user?.firstName} ${participant.user?.lastName}`)} />&nbsp;
-                    {participant.user?.firstName} {participant.user?.lastName}
-                  </Box>
-                </TableCell>
-                {participant.lessonAttendances.map(lessonAttendance => (
-                  <TableCell key={lessonAttendance.lesson.id} align="center"
-                    sx={{
-                      backgroundColor: participant.user?.passes.find(p => course && dayjs(p.startTime).isBefore(lessonAttendance.lesson.startTime) && dayjs(p.endTime).isAfter(lessonAttendance.lesson.startTime) && p.courseIds.includes(course.id)) ? '#f0f0f0' : '#fff'
+                    <Box sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      '& > div': {mr: 1, flexShrink: 0}
                     }}>
-                    <AttendanceStatusSelector
-                      status={lessonAttendance.attendance?.status}
-                      onStatusChange={(newStatus) => handleAttendanceStatusChange(lessonAttendance.attendance, lessonAttendance.lesson.id, participant.userId, newStatus)}
-                      ></AttendanceStatusSelector>
+                      <Avatar {...stringAvatar(`${user?.firstName} ${user?.lastName}`)} />&nbsp;
+                      <Box>
+                        <Typography
+                          variant="body1">{user?.firstName} {user?.lastName}</Typography>
+                        {lastPass &&
+                          <Typography variant="caption" color="text.secondary">Karnet: {dayjs(lastPass.startTime).format("DD.MM")} - {dayjs(lastPass.endTime).format("DD.MM")}</Typography>
+                        }
+                      </Box>
+                    </Box>
                   </TableCell>
-                ))}
-              </TableRow>
-            ))}
+                  {participant.lessonAttendances.map(lessonAttendance => (
+                    <TableCell key={lessonAttendance.lesson.id} align="center"
+                               sx={{
+                                 backgroundColor: user?.passes.find(p => course && dayjs(p.startTime).isBefore(lessonAttendance.lesson.startTime) && dayjs(p.endTime).isAfter(lessonAttendance.lesson.startTime) && p.courseIds.includes(course.id)) ? '#f0f0f0' : '#fff'
+                               }}>
+                      <AttendanceStatusSelector
+                        status={lessonAttendance.attendance?.status}
+                        onStatusChange={(newStatus) => handleAttendanceStatusChange(lessonAttendance.attendance, lessonAttendance.lesson.id, participant.userId, newStatus)}
+                      ></AttendanceStatusSelector>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              )
+            })}
           </TableBody>
           <TableFooter>
             <TableRow>

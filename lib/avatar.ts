@@ -25,6 +25,7 @@ export function stringAvatar(name: string) {
       width: 32,
       height: 32,
       bgcolor: stringToColor(name),
+      fontSize: '0.8rem',
     },
     children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
   };
