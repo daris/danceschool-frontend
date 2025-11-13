@@ -134,7 +134,7 @@ export const CourseEditView = (props: {id: string}) => {
           <TableBody>
             {courseWithUsers && courseWithUsers.participants.map(participant => {
               const user = participant.user;
-              const lastPass = user?.passes[user.passes.length - 1];
+              const lastPass = user?.passes ? user?.passes[user.passes.length - 1] : null;
 
               return (
                 <TableRow
@@ -165,7 +165,7 @@ export const CourseEditView = (props: {id: string}) => {
                   {participant.lessonAttendances.map(lessonAttendance => (
                     <TableCell key={lessonAttendance.lesson.id} align="center"
                                sx={{
-                                 backgroundColor: user?.passes.find(p => course && dayjs(p.startTime).isBefore(lessonAttendance.lesson.startTime) && dayjs(p.endTime).isAfter(lessonAttendance.lesson.startTime) && p.courseIds.includes(course.id)) ? '#f0f0f0' : '#fff'
+                                 backgroundColor: user?.passes?.find(p => course && dayjs(p.startTime).isBefore(lessonAttendance.lesson.startTime) && dayjs(p.endTime).isAfter(lessonAttendance.lesson.startTime) && p.courseIds.includes(course.id)) ? '#f0f0f0' : '#fff'
                                }}>
                       <AttendanceStatusSelector
                         status={lessonAttendance.attendance?.status}

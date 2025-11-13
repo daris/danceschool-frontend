@@ -1,3 +1,5 @@
+import api from "@/lib/api/axios";
+
 export interface UserPass {
   id: string;
   startTime: string;
@@ -24,12 +26,8 @@ export interface UsersApiResponse {
   limit: number;
 }
 
-// A mock function to mimic making an async request for data
-export const fetchUsers = async () => {
-  const response = await fetch("http://localhost:8080/users", {
-    headers: { "Content-Type": "application/json" },
-  });
-  const result: UsersApiResponse = await response.json();
-
-  return result;
+// Fetch all users
+export const fetchUsers = async (): Promise<UsersApiResponse> => {
+  const { data } = await api.get<UsersApiResponse>("/users");
+  return data;
 };

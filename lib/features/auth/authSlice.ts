@@ -44,6 +44,9 @@ export const authSlice = createSlice({
       localStorage.removeItem("accessToken");
     },
   },
+  selectors: {
+    selectAuthUser: (auth) => auth.user,
+  },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -64,4 +67,5 @@ export const authSlice = createSlice({
 });
 
 export const { logout } = authSlice.actions;
+export const {selectAuthUser} = authSlice.selectors;
 export default authSlice;

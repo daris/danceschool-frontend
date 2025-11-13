@@ -6,13 +6,18 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
+import Avatar from '@mui/material/Avatar';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import {useRouter} from "next/navigation";
+import {useAppSelector} from "@/lib/hooks";
+import {selectAuthUser} from "@/lib/features/auth/authSlice";
+import {stringAvatar} from "@/lib/avatar";
 
 interface Page {
   path: string;
@@ -22,6 +27,8 @@ const pages: Page[] = [{path: '/courses', name: 'Courses'}];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function MainAppBar() {
+  const authUser = useAppSelector(selectAuthUser);
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -136,35 +143,37 @@ function MainAppBar() {
               </Button>
             ))}
           </Box>
-          {/*<Box sx={{ flexGrow: 0 }}>*/}
-          {/*  <Tooltip title="Open settings">*/}
-          {/*    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>*/}
-          {/*      <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />*/}
-          {/*    </IconButton>*/}
-          {/*  </Tooltip>*/}
-          {/*  <Menu*/}
-          {/*    sx={{ mt: '45px' }}*/}
-          {/*    id="menu-appbar"*/}
-          {/*    anchorEl={anchorElUser}*/}
-          {/*    anchorOrigin={{*/}
-          {/*      vertical: 'top',*/}
-          {/*      horizontal: 'right',*/}
-          {/*    }}*/}
-          {/*    keepMounted*/}
-          {/*    transformOrigin={{*/}
-          {/*      vertical: 'top',*/}
-          {/*      horizontal: 'right',*/}
-          {/*    }}*/}
-          {/*    open={Boolean(anchorElUser)}*/}
-          {/*    onClose={handleCloseUserMenu}*/}
-          {/*  >*/}
-          {/*    {settings.map((setting) => (*/}
-          {/*      <MenuItem key={setting} onClick={handleCloseUserMenu}>*/}
-          {/*        <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>*/}
-          {/*      </MenuItem>*/}
-          {/*    ))}*/}
-          {/*  </Menu>*/}
-          {/*</Box>*/}
+          {authUser &&
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar {...stringAvatar(`${authUser.firstName} ${authUser.lastName}`)} />&nbsp;
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          }
         </Toolbar>
       </Container>
     </AppBar>
