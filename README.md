@@ -1,27 +1,106 @@
-# Redux Toolkit TypeScript Example
+# Dance School Frontend
 
-This example shows how to integrate Next.js with [Redux Toolkit](https://redux-toolkit.js.org).
+This repository contains the **frontend for the Dance School application**, built with **Next.js**, **Redux Toolkit**, **TypeScript**, and **Material-UI (MUI)**. It integrates with the **Dance School Spring Boot REST API** to provide user registration, login, and attendance management.
 
-**Redux Toolkit**(also known as "RTK" for short) provides a standardized way to write Redux logic. It includes utilities that help simplify many common use cases, including [store setup](https://redux-toolkit.js.org/api/configureStore), [creating reducers and writing immutable update logic](https://redux-toolkit.js.org/api/createreducer), and even [creating entire "slices" of state at once](https://redux-toolkit.js.org/api/createslice). This example showcases each of these features in conjunction with Next.js.
+## Project Description
 
-## Deploy Your Own
+The frontend provides a modern interface for students and administrators of a Dance School to manage courses, attendance, and user accounts. It communicates with the backend API using **Axios**, and uses **JWT authentication** for secure access to protected endpoints.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-redux&project-name=with-redux&repository-name=with-redux)
+### Key Features
 
-## How to Use
+- **User Registration and Login**
+    - Register new accounts.
+    - Login using JWT-based authentication.
+    - Persist user data and tokens in `localStorage` and Redux store.
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+- **JWT Authentication**
+    - Secure endpoints are accessible only with a valid JWT.
+    - Token automatically sent with Axios requests to backend.
 
-```bash
-npx create-next-app --example with-redux with-redux-app
+- **Attendance Management**
+    - View and update attendance for lessons.
+    - Add participants to courses.
+
+- **Course and User Management**
+    - Display available courses.
+    - List participants and manage their enrollment.
+
+- **Material-UI Components**
+    - Styled forms, tables, and buttons for a responsive UI.
+
+- **Redux Toolkit + RTK Query**
+    - Centralized state management.
+    - Async API calls handled via RTK Query slices.
+
+- **Protected Routes**
+    - Dashboard and course management pages require login.
+    - Redirects to login page if user is not authenticated.
+
+## Backend Integration
+
+This frontend connects to the **Dance School Spring Boot API**, which provides:
+
+- **User registration and login** with JWT.
+- **JWT-based authentication** for secure endpoints.
+- **Password hashing** using BCrypt.
+- **Attendance and pass management**.
+- **Swagger UI** for API documentation and testing.
+
+### Backend Base URL
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
 ```
 
-```bash
-yarn create next-app --example with-redux with-redux-app
-```
+> Make sure the backend is running and accessible with CORS enabled.
+
+## Installation
+
+1. Clone the repository:
 
 ```bash
-pnpm create next-app --example with-redux with-redux-app
+git clone https://github.com/daris/danceschool-frontend.git
+cd danceschool-frontend
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+3. Run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+
+4. Open your browser at [http://localhost:3000](http://localhost:3000)
+
+## Usage
+
+- **Register** a new user via the registration form.
+- **Login** to receive a JWT token.
+- Access **protected pages** like dashboard and course management.
+- **Manage attendance** and participants for courses.
+- State is persisted in Redux + `localStorage` to maintain session.
+
+## Deployment
+
+You can deploy this frontend to **Vercel** or any hosting provider:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+Ensure the backend API is accessible and CORS is properly configured.
+
+## License
+
+This project is open-source and available under the **MIT License**.
