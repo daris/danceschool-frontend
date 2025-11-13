@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/lib/features/auth/authSlice";
 import { RootState, AppDispatch } from "@/lib/store";
 import { Box, TextField, Button, Typography, CircularProgress } from "@mui/material";
+import {useRouter} from "next/navigation";
 
 export const LoginForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -13,9 +14,16 @@ export const LoginForm: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(login({ username, password }));
+    const resultAction = await dispatch(login({ username, password }));
+
+    if (login.fulfilled.match(resultAction)) {
+      // Redirect to home page after successful login
+      router.push("/");
+    }
   };
 
   return (

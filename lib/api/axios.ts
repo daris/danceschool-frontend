@@ -1,5 +1,5 @@
 import axios from "axios";
-import {makeStore, store} from "@/lib/store";
+import {store} from "@/lib/store";
 import {logout} from "@/lib/features/auth/authSlice";
 
 const api = axios.create({
