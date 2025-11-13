@@ -1,5 +1,6 @@
 import {CourseEditView} from "@/app/components/course/Course";
 import { Container } from "@mui/material";
+import {ProtectedRoute} from "@/app/components/ProtectedRoute";
 
 export default async function CoursePage({params}: {
   params: Promise<{ slug: string }>
@@ -7,9 +8,11 @@ export default async function CoursePage({params}: {
   const { slug } = await params
 
   return (
-    <Container maxWidth="xl">
-      <h1>Course</h1>
-      <CourseEditView id={slug} />
-    </Container>
+    <ProtectedRoute>
+      <Container maxWidth="xl">
+        <h1>Course</h1>
+        <CourseEditView id={slug} />
+      </Container>
+    </ProtectedRoute>
   );
 }
