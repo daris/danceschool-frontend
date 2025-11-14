@@ -1,106 +1,80 @@
-# Dance School Frontend
+## DanceSchool Frontend
 
-This repository contains the **frontend for the Dance School application**, built with **Next.js**, **Redux Toolkit**, **TypeScript**, and **Material-UI (MUI)**. It integrates with the **Dance School Spring Boot REST API** to provide user registration, login, and attendance management.
+Modern frontend for managing dance school operations, built with Next.js App Router, Redux Toolkit, and Material UI. It provides authentication flows, course browsing, and integration points for the accompanying backend APIs.
 
-## Project Description
+### Features
+- **Authentication:** Login and registration forms backed by async thunks and axios interceptors, with protected routes gating private views.
+- **Course Management:** Course listings and detail pages wired for RTK Query data fetching.
+- **User Management:** Centralized Redux store with slices for users, courses, authentication, and counter examples.
+- **Responsive UI:** Material UI components and custom styling for a polished experience.
 
-The frontend provides a modern interface for students and administrators of a Dance School to manage courses, attendance, and user accounts. It communicates with the backend API using **Axios**, and uses **JWT authentication** for secure access to protected endpoints.
+### Tech Stack
+- Next.js (App Router, TypeScript)
+- React 18 + Redux Toolkit (`combineSlices`, RTK Query-ready store)
+- Material UI + Emotion styling
+- Axios with auto token injection and 401 handling
 
-### Key Features
+### Getting Started
+1. **Install dependencies**
+   ```bash
+   pnpm install
+   # or
+   npm install
+   ```
+2. **Configure environment**
+   Create `.env.local` and define the API base URL:
+   ```bash
+   NEXT_PUBLIC_API_BASE_URL=http://localhost:8080/
+   ```
+   The axios client falls back to `http://localhost:8080/` if unset.
+3. **Run the dev server**
+   ```bash
+   pnpm dev
+   # or
+   npm run dev
+   ```
+   Open `http://localhost:3000`.
+4. **Build for production**
+   ```bash
+   pnpm build
+   pnpm start
+   ```
 
-- **User Registration and Login**
-    - Register new accounts.
-    - Login using JWT-based authentication.
-    - Persist user data and tokens in `localStorage` and Redux store.
-
-- **JWT Authentication**
-    - Secure endpoints are accessible only with a valid JWT.
-    - Token automatically sent with Axios requests to backend.
-
-- **Attendance Management**
-    - View and update attendance for lessons.
-    - Add participants to courses.
-
-- **Course and User Management**
-    - Display available courses.
-    - List participants and manage their enrollment.
-
-- **Material-UI Components**
-    - Styled forms, tables, and buttons for a responsive UI.
-
-- **Redux Toolkit + RTK Query**
-    - Centralized state management.
-    - Async API calls handled via RTK Query slices.
-
-- **Protected Routes**
-    - Dashboard and course management pages require login.
-    - Redirects to login page if user is not authenticated.
-
-## Backend Integration
-
-This frontend connects to the **Dance School Spring Boot API**, which provides:
-
-- **User registration and login** with JWT.
-- **JWT-based authentication** for secure endpoints.
-- **Password hashing** using BCrypt.
-- **Attendance and pass management**.
-- **Swagger UI** for API documentation and testing.
-
-### Backend Base URL
-
-```env
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+### Project Structure
+```
+app/
+  components/         # Reusable UI, forms, protected routing
+  courses/            # Course pages (index + dynamic slug)
+  login/, register/   # Auth pages
+  styles/             # Global and layout styles
+lib/
+  api/axios.ts        # Axios instance with auth interceptors
+  features/           # Redux slices (auth, courses, users, counter)
+  store.ts            # Store configuration & provider helpers
+public/               # Static assets (logos, icons)
 ```
 
-> Make sure the backend is running and accessible with CORS enabled.
+### Authentication Flow
+- `lib/features/auth/authSlice.ts` defines the login thunk and reducers. Upon success, tokens and user info are persisted to `localStorage`.
+- `lib/api/axios.ts` attaches the bearer token on requests and triggers `logout` automatically on 401 responses.
+- `app/components/ProtectedRoute.tsx` redirects unauthenticated users to `/login` and hides content until a token exists.
 
-## Installation
+### Available Scripts
+- `pnpm dev` / `npm run dev` – start Next.js dev server
+- `pnpm build` / `npm run build` – create production build
+- `pnpm start` / `npm run start` – serve the production build
 
-1. Clone the repository:
+### Testing & QA
+Automated tests are not yet included. Recommended next steps:
+- Add unit tests for Redux slices and async thunks.
+- Implement integration tests for auth flows using Playwright or Cypress.
 
-```bash
-git clone https://github.com/daris/danceschool-frontend.git
-cd danceschool-frontend
-```
+### Contributing
+1. Fork and clone the repo.
+2. Create a feature branch.
+3. Run the dev server and ensure linting/tests (when added) pass.
+4. Submit a PR with a clear description of changes.
 
-2. Install dependencies:
+### License
+This project currently has no explicit license. Add one (e.g., MIT) before distributing or accepting external contributions.
 
-```bash
-npm install
-# or
-yarn install
-# or
-pnpm install
-```
-
-3. Run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-
-4. Open your browser at [http://localhost:3000](http://localhost:3000)
-
-## Usage
-
-- **Register** a new user via the registration form.
-- **Login** to receive a JWT token.
-- Access **protected pages** like dashboard and course management.
-- **Manage attendance** and participants for courses.
-- State is persisted in Redux + `localStorage` to maintain session.
-
-## Deployment
-
-You can deploy this frontend to **Vercel** or any hosting provider:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
-
-Ensure the backend API is accessible and CORS is properly configured.
-
-## License
-
-This project is open-source and available under the **MIT License**.

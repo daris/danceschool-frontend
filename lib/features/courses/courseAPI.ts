@@ -70,8 +70,8 @@ export const updateAttendanceApi = async (attendance: Attendance): Promise<Cours
 };
 
 // Create a new attendance
-export const createAttendanceApi = async (attendance: Attendance): Promise<Course> => {
-  const { data } = await api.post<Course>("/attendances", {
+export const createAttendanceApi = async (attendance: Attendance): Promise<Attendance> => {
+  const { data } = await api.post<Attendance>("/attendances", {
     user: `/users/${attendance.userId}`,
     lesson: `/lessons/${attendance.lessonId}`,
     status: attendance.status,

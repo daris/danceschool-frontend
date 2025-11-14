@@ -89,9 +89,9 @@ export const coursesSlice = createAppSlice({
     ),
     createAttendance: create.asyncThunk(
       async (params: {attendance: Attendance, courseId: string}) => {
-        await createAttendanceApi(params.attendance);
+        const attendance = await createAttendanceApi(params.attendance);
 
-        return {attendance: params.attendance, courseId: params.courseId};
+        return {attendance: {...params.attendance, id: attendance.id}, courseId: params.courseId};
       },
       {
         pending: (state) => {
