@@ -9,12 +9,12 @@ import {Attendance, Course, Participant} from "@/lib/features/courses/types";
 
 export interface CourseSliceState {
   courses: Course[];
-  status: "idle" | "loading" | "failed";
+  status: "initial" | "idle" | "loading" | "failed";
 }
 
 const initialState: CourseSliceState = {
   courses: [],
-  status: "loading",
+  status: "initial",
 };
 
 export const coursesSlice = createAppSlice({

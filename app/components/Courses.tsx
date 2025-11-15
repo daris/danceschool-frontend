@@ -1,5 +1,5 @@
 "use client";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import Link from "next/link";
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {loadCourses, selectCourses, selectStatus} from "@/lib/features/courses/coursesApiSlice";
@@ -10,6 +10,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import {Box, LinearProgress} from "@mui/material";
 
 export const Courses = () => {
   const dispatch = useAppDispatch();
@@ -17,8 +18,10 @@ export const Courses = () => {
   const courses = useAppSelector(selectCourses);
 
   useEffect(() => {
-    dispatch(loadCourses());
-    dispatch(loadUsers());
+    if (status == "initial") {
+      dispatch(loadCourses());
+      dispatch(loadUsers());
+    }
   }, [dispatch]);
 
   if (status == 'failed') {
@@ -29,36 +32,29 @@ export const Courses = () => {
     );
   }
 
-  if (status == 'loading') {
-    return (
-      <div>
-        <h1>Loading...</h1>
-      </div>
-    );
-  }
-
-  if (status == 'idle' && courses) {
-    return (
-      <div>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableBody>
-              {courses.map((course) => (
-                <TableRow
-                  key={course.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    <Link key={course.id} href={"/courses/" + course.id}>{course.name} {course.level}</Link>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-    );
-  }
-
-  return null;
+  return (
+    <div style={{position: 'relative'}}>
+      {status == 'loading' &&
+        <Box sx={{ width: '100%', position: 'absolute', zIndex: 100 }}>
+          <LinearProgress />
+        </Box>
+      }
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableBody>
+            {courses && courses.map((course) => (
+              <TableRow
+                key={course.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  <Link key={course.id} href={"/courses/" + course.id}>{course.name} {course.level}</Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+  );
 };

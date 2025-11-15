@@ -39,8 +39,10 @@ export const CourseEditView = (props: {id: string}) => {
   const [selectedParticipant, setSelectedParticipant] = useState<User|null>(null);
 
   useEffect(() => {
-    dispatch(loadCourses());
-    dispatch(loadUsers());
+    if (status == "initial") {
+      dispatch(loadCourses());
+      dispatch(loadUsers());
+    }
   }, [dispatch]);
 
   const handleAddParticipant = async (e: FormEvent) => {
