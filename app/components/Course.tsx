@@ -9,7 +9,7 @@ import {
   updateAttendance
 } from "@/lib/features/courses/coursesApiSlice";
 import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
-import React, {useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {FormEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {loadUsers} from "@/lib/features/users/usersApiSlice";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -43,7 +43,9 @@ export const CourseEditView = (props: {id: string}) => {
     dispatch(loadUsers());
   }, [dispatch]);
 
-  const handleAddParticipant = () => {
+  const handleAddParticipant = async (e: FormEvent) => {
+    e.preventDefault();
+
     if (!selectedParticipant) return;
 
     // Dispatch with parameters
@@ -176,44 +178,44 @@ export const CourseEditView = (props: {id: string}) => {
               )
             })}
           </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell component="th" scope="row" sx={{
-                position: 'sticky',
-                left: 0,
-                background: '#fff',
-                zIndex: 2,
-                borderRight: '1px solid rgba(224, 224, 224, 1)',
-              }}>
-                <Autocomplete
-                  disablePortal
-                  options={availableParticipants}
-                  getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
-                  sx={{ width: 300 }}
-                  value={selectedParticipant}
-                  onChange={(event, newValue) => setSelectedParticipant(newValue)}
-                  renderInput={(params) => <TextField {...params} label="Dodaj uczestnika" />}
-                  renderOption={(props, option) => {
-                    const { key, ...optionProps } = props;
-                    return (
-                      <Box
-                        key={key}
-                        component="li"
-                        sx={{ '& > Avatar': { mr: 2, flexShrink: 0 } }}
-                        {...optionProps}
-                      >
-                        <Avatar {...stringAvatar(`${option.firstName} ${option.lastName}`)} />&nbsp;
-                        {option.firstName} {option.lastName}
-                      </Box>
-                    );
-                  }}
-                />
-                <Button variant="text" onClick={handleAddParticipant}>Dodaj</Button>
-              </TableCell>
-            </TableRow>
-          </TableFooter>
         </Table>
       </TableContainer>
+
+      <Box
+        component="form"
+        onSubmit={handleAddParticipant}
+        sx={{
+          display: "flex",
+          gap: 2,
+          alignItems: "center",
+          width: "100%",
+          paddingTop: 3,
+        }}>
+        <Autocomplete
+          disablePortal
+          sx={{ flexGrow: 1 }}
+          options={availableParticipants}
+          getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
+          value={selectedParticipant}
+          onChange={(event, newValue) => setSelectedParticipant(newValue)}
+          renderInput={(params) => <TextField {...params} label="Dodaj uczestnika" />}
+          renderOption={(props, option) => {
+            const { key, ...optionProps } = props;
+            return (
+              <Box
+                key={key}
+                component="li"
+                sx={{ '& > Avatar': { mr: 2, flexShrink: 0 } }}
+                {...optionProps}
+              >
+                <Avatar {...stringAvatar(`${option.firstName} ${option.lastName}`)} />&nbsp;
+                {option.firstName} {option.lastName}
+              </Box>
+            );
+          }}
+        />
+        <Button variant="text" type="submit">Dodaj</Button>
+      </Box>
     </div>
   );
 };

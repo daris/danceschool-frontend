@@ -35,3 +35,8 @@ export const createAttendanceApi = async (attendance: Attendance): Promise<Atten
   });
   return data;
 };
+
+export const createCourseApi = async (course: Course): Promise<Course> => {
+  const { data } = await api.post<Course>("/courses", course);
+  return data;
+};

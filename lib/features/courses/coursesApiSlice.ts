@@ -1,7 +1,7 @@
 import {createAppSlice} from "@/lib/createAppSlice";
 import {
   addParticipant,
-  createAttendanceApi,
+  createAttendanceApi, createCourseApi,
   fetchCourses,
   updateAttendanceApi
 } from "@/lib/features/courses/courseAPI";
@@ -110,6 +110,25 @@ export const coursesSlice = createAppSlice({
         },
       },
     ),
+
+    createCourse: create.asyncThunk(
+      async (course: Course) => {
+        const response = await createCourseApi(course);
+        return response;
+      },
+      {
+        pending: (state) => {
+          state.status = "loading";
+        },
+        fulfilled: (state, action) => {
+          state.status = "idle";
+          state.courses.push(action.payload);
+        },
+        rejected: (state) => {
+          state.status = "failed";
+        },
+      },
+    ),
   }),
   selectors: {
     selectCourses: (state) => state.courses,
@@ -118,5 +137,5 @@ export const coursesSlice = createAppSlice({
   },
 });
 
-export const { loadCourses, addParticipantForCourse, updateAttendance, createAttendance } = coursesSlice.actions;
+export const { loadCourses, addParticipantForCourse, updateAttendance, createAttendance, createCourse } = coursesSlice.actions;
 export const { selectCourses, selectStatus, selectCourse } = coursesSlice.selectors;
