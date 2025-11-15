@@ -15,6 +15,7 @@ export interface Lesson {
   id: string;
   startTime: string;
   endTime: string;
+  courseId: string;
   attendances: Attendance[];
 }
 

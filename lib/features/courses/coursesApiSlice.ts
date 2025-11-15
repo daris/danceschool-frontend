@@ -1,11 +1,11 @@
 import {createAppSlice} from "@/lib/createAppSlice";
 import {
   addParticipant,
-  createAttendanceApi, createCourseApi,
+  createAttendanceApi, createCourseApi, createLessonApi,
   fetchCourses,
   updateAttendanceApi
 } from "@/lib/features/courses/courseAPI";
-import {Attendance, Course, Participant} from "@/lib/features/courses/types";
+import {Attendance, Course, Lesson, Participant} from "@/lib/features/courses/types";
 
 export interface CourseSliceState {
   courses: Course[];
@@ -129,6 +129,30 @@ export const coursesSlice = createAppSlice({
         },
       },
     ),
+
+    createLesson: create.asyncThunk(
+      async (lesson: Lesson) => {
+        const lessonData = await createLessonApi(lesson);
+
+        return {lesson: {...lesson, id: lessonData.id}};
+      },
+      {
+        pending: (state) => {
+          state.status = "loading";
+        },
+        fulfilled: (state, action) => {
+          state.status = "idle";
+
+          const lesson = action.payload.lesson;
+          const course = state.courses.find(course => course.id == action.payload.lesson.courseId);
+          course?.lessons.push(lesson);
+        },
+        rejected: (state) => {
+          state.status = "failed";
+        },
+      },
+    ),
+
   }),
   selectors: {
     selectCourses: (state) => state.courses,
@@ -137,5 +161,5 @@ export const coursesSlice = createAppSlice({
   },
 });
 
-export const { loadCourses, addParticipantForCourse, updateAttendance, createAttendance, createCourse } = coursesSlice.actions;
+export const { loadCourses, addParticipantForCourse, updateAttendance, createAttendance, createCourse, createLesson } = coursesSlice.actions;
 export const { selectCourses, selectStatus, selectCourse } = coursesSlice.selectors;

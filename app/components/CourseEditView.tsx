@@ -2,7 +2,7 @@
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {
   addParticipantForCourse,
-  createAttendance,
+  createAttendance, createLesson,
   loadCourses,
   selectCourse,
   selectStatus,
@@ -24,10 +24,11 @@ import {selectAvailableParticipantsForCourse} from "@/lib/selectors/availablePar
 import Button from "@mui/material/Button";
 import {Avatar, Box, LinearProgress, Typography} from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
-import dayjs from "dayjs";
+import dayjs, {Dayjs} from "dayjs";
 import {AttendanceStatusSelector} from "@/app/components/AttendanceStatusSelector";
-import {Attendance, AttendanceStatus} from "@/lib/features/courses/types";
+import {Attendance, AttendanceStatus, Lesson} from "@/lib/features/courses/types";
 import {User} from "@/lib/features/users/types";
+import {DateTimePicker} from "@mui/x-date-pickers";
 
 export const CourseEditView = (props: {id: string}) => {
   const dispatch = useAppDispatch();
@@ -36,6 +37,7 @@ export const CourseEditView = (props: {id: string}) => {
   const courseWithUsers = useAppSelector((state) => selectCourseWithUsers(state, props.id));
   const availableParticipants = useAppSelector((state) => selectAvailableParticipantsForCourse(state, props.id));
   const [selectedParticipant, setSelectedParticipant] = useState<User|null>(null);
+  const [lessonDateTime, setLessonDateTime] = React.useState<Dayjs | null>(null);
 
   useEffect(() => {
     if (status == "initial") {
@@ -49,14 +51,26 @@ export const CourseEditView = (props: {id: string}) => {
 
     if (!selectedParticipant) return;
 
-    // Dispatch with parameters
     dispatch(addParticipantForCourse({
       courseId: props.id,
       userId: selectedParticipant.id
     }));
 
-    // Optionally clear selection
     setSelectedParticipant(null);
+  };
+
+
+  const handleAddLesson = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!course) { return; }
+
+    dispatch(createLesson({
+      startTime: lessonDateTime?.toISOString(),
+      endTime: lessonDateTime?.toISOString(), // todo: fixme
+      attendances: [],
+      courseId: course.id
+    } as Lesson));
   };
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -130,6 +144,26 @@ export const CourseEditView = (props: {id: string}) => {
                     </Box>
                   </TableCell>
                 ))}
+                <TableCell>
+                  <Box
+                    component="form"
+                    onSubmit={handleAddLesson}
+                    sx={{
+                      display: "flex",
+                      gap: 2,
+                      alignItems: "center",
+                      width: "100%",
+                      paddingTop: 3,
+                    }}>
+                    <DateTimePicker
+                      label="Start time"
+                      sx={{ flexGrow: 1 }}
+                      value={lessonDateTime}
+                      onChange={(dateTime) => setLessonDateTime(dateTime)}
+                    />
+                    <Button variant="text" type="submit">Dodaj</Button>
+                  </Box>
+                </TableCell>
               </TableRow>
             </TableHead>
           }
@@ -175,6 +209,8 @@ export const CourseEditView = (props: {id: string}) => {
                       ></AttendanceStatusSelector>
                     </TableCell>
                   ))}
+
+                  <TableCell></TableCell>
                 </TableRow>
               )
             })}

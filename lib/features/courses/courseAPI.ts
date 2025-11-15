@@ -1,5 +1,5 @@
 import api from "@/lib/api/axios";
-import {Attendance, Course, CoursesApiResponse, Participant} from "@/lib/features/courses/types";
+import {Attendance, Course, CoursesApiResponse, Lesson, Participant} from "@/lib/features/courses/types";
 
 // Fetch all courses
 export const fetchCourses = async (): Promise<CoursesApiResponse> => {
@@ -38,5 +38,16 @@ export const createAttendanceApi = async (attendance: Attendance): Promise<Atten
 
 export const createCourseApi = async (course: Course): Promise<Course> => {
   const { data } = await api.post<Course>("/courses", course);
+  return data;
+};
+
+
+export const createLessonApi = async (lesson: Lesson): Promise<Lesson> => {
+  const { data } = await api.post<Lesson>("/lessons",
+    {
+      ...lesson,
+      course: `/courses/${lesson.courseId}`,
+    }
+  );
   return data;
 };
