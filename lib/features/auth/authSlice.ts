@@ -1,18 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "@/lib/api/axios";
-
-interface User {
-  id: string;
-  firstName?: string;
-  lastName?: string;
-}
-
-interface AuthState {
-  token: string | null;
-  user: User | null;
-  loading: boolean;
-  error: string | null;
-}
+import {AuthState} from "@/lib/features/auth/types";
 
 const initialState: AuthState = {
   token: typeof window !== "undefined" ? localStorage.getItem("accessToken") : null,

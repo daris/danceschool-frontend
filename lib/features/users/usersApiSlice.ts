@@ -1,5 +1,6 @@
 import {createAppSlice} from "@/lib/createAppSlice";
-import {User, fetchUsers} from "@/lib/features/users/usersAPI";
+import {fetchUsers} from "@/lib/features/users/usersAPI";
+import {User} from "@/lib/features/users/types";
 
 export interface UserSliceState {
   users: User[];

@@ -1,13 +1,11 @@
 import {createAppSlice} from "@/lib/createAppSlice";
 import {
   addParticipant,
-  Attendance,
-  Course,
   createAttendanceApi,
   fetchCourses,
-  Participant,
   updateAttendanceApi
 } from "@/lib/features/courses/courseAPI";
+import {Attendance, Course, Participant} from "@/lib/features/courses/types";
 
 export interface CourseSliceState {
   courses: Course[];

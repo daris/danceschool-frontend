@@ -23,12 +23,12 @@ import Autocomplete from '@mui/material/Autocomplete';
 import {selectAvailableParticipantsForCourse} from "@/lib/selectors/availableParticipantsForCourse";
 import TableFooter from "@mui/material/TableFooter";
 import Button from "@mui/material/Button";
-import {User} from "@/lib/features/users/usersAPI";
-import {Attendance, AttendanceStatus,} from "@/lib/features/courses/courseAPI";
 import {Avatar, Box, LinearProgress, Typography} from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
 import dayjs from "dayjs";
 import {AttendanceStatusSelector} from "@/app/components/AttendanceStatusSelector";
+import {Attendance, AttendanceStatus} from "@/lib/features/courses/types";
+import {User} from "@/lib/features/users/types";
 
 export const CourseEditView = (props: {id: string}) => {
   const dispatch = useAppDispatch();

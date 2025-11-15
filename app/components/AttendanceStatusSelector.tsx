@@ -1,8 +1,8 @@
 import {green, red, yellow} from "@mui/material/colors";
 import {Box, BoxProps, Menu, MenuItem, SxProps, Tooltip} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import {AttendanceStatus} from "@/lib/features/courses/courseAPI";
 import React, {useState} from "react";
+import {AttendanceStatus} from "@/lib/features/courses/types";
 
 interface AttendanceStatusSelectorProps extends BoxProps {
   status?: AttendanceStatus|null;
