@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function DashboardPage() {
   return (
-    <Box p={3}>
+    <Box paddingTop={3}>
       <Card sx={{ borderRadius: 4, boxShadow: 3 }}>
         <CardContent>
           <Typography variant="h5" fontWeight={600} gutterBottom>
