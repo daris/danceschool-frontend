@@ -2,7 +2,6 @@ import type {ReactNode} from "react";
 import {StoreProvider} from "./StoreProvider";
 
 import "./styles/globals.css";
-import styles from "./styles/layout.module.css"
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -18,9 +17,9 @@ export default function RootLayout({ children }: Props) {
     <StoreProvider>
       <html lang="en">
         <body>
-          <section className={styles.container}>
+          <section>
             <MainAppBar />
-            <main className={styles.main}>{children}</main>
+            <main>{children}</main>
           </section>
         </body>
       </html>
