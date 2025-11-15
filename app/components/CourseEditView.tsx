@@ -26,7 +26,7 @@ import {Avatar, Box, LinearProgress, Typography} from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
 import dayjs, {Dayjs} from "dayjs";
 import {AttendanceStatusSelector} from "@/app/components/AttendanceStatusSelector";
-import {Attendance, AttendanceStatus, Lesson} from "@/lib/features/courses/types";
+import {Attendance, AttendanceStatus, CreateLesson, Lesson} from "@/lib/features/courses/types";
 import {User} from "@/lib/features/users/types";
 import {DateTimePicker} from "@mui/x-date-pickers";
 
@@ -63,14 +63,17 @@ export const CourseEditView = (props: {id: string}) => {
   const handleAddLesson = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (containerRef.current) {
+      scrollLeftRef.current = containerRef.current.scrollLeft;
+    }
+
     if (!course) { return; }
 
     dispatch(createLesson({
       startTime: lessonDateTime?.toISOString(),
       endTime: lessonDateTime?.toISOString(), // todo: fixme
-      attendances: [],
       courseId: course.id
-    } as Lesson));
+    } as CreateLesson));
   };
 
   const containerRef = useRef<HTMLDivElement>(null);

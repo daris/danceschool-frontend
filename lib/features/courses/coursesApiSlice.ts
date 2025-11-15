@@ -5,7 +5,7 @@ import {
   fetchCourses,
   updateAttendanceApi
 } from "@/lib/features/courses/courseAPI";
-import {Attendance, Course, Lesson, Participant} from "@/lib/features/courses/types";
+import {Attendance, Course, CreateLesson, Lesson, Participant} from "@/lib/features/courses/types";
 
 export interface CourseSliceState {
   courses: Course[];
@@ -131,10 +131,10 @@ export const coursesSlice = createAppSlice({
     ),
 
     createLesson: create.asyncThunk(
-      async (lesson: Lesson) => {
+      async (lesson: CreateLesson) => {
         const lessonData = await createLessonApi(lesson);
 
-        return {lesson: {...lesson, id: lessonData.id}};
+        return {lesson: {...lesson, ...lessonData, attendances: []} as Lesson};
       },
       {
         pending: (state) => {

@@ -42,3 +42,9 @@ export interface CoursesApiResponse {
   skip: number;
   limit: number;
 }
+
+export interface CreateLesson {
+  startTime: string;
+  endTime: string;
+  courseId: string;
+}
