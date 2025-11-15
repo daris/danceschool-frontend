@@ -29,6 +29,7 @@ import {AttendanceStatusSelector} from "@/app/components/AttendanceStatusSelecto
 import {Attendance, AttendanceStatus, CreateLesson, Lesson} from "@/lib/features/courses/types";
 import {User} from "@/lib/features/users/types";
 import {DateTimePicker} from "@mui/x-date-pickers";
+import {CreateLessonButton} from "@/app/components/CreateLessonButton";
 
 export const CourseEditView = (props: {id: string}) => {
   const dispatch = useAppDispatch();
@@ -37,7 +38,6 @@ export const CourseEditView = (props: {id: string}) => {
   const courseWithUsers = useAppSelector((state) => selectCourseWithUsers(state, props.id));
   const availableParticipants = useAppSelector((state) => selectAvailableParticipantsForCourse(state, props.id));
   const [selectedParticipant, setSelectedParticipant] = useState<User|null>(null);
-  const [lessonDateTime, setLessonDateTime] = React.useState<Dayjs | null>(null);
 
   useEffect(() => {
     if (status == "initial") {
@@ -57,23 +57,6 @@ export const CourseEditView = (props: {id: string}) => {
     }));
 
     setSelectedParticipant(null);
-  };
-
-
-  const handleAddLesson = async (e: FormEvent) => {
-    e.preventDefault();
-
-    if (containerRef.current) {
-      scrollLeftRef.current = containerRef.current.scrollLeft;
-    }
-
-    if (!course) { return; }
-
-    dispatch(createLesson({
-      startTime: lessonDateTime?.toISOString(),
-      endTime: lessonDateTime?.toISOString(), // todo: fixme
-      courseId: course.id
-    } as CreateLesson));
   };
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -147,24 +130,9 @@ export const CourseEditView = (props: {id: string}) => {
                   </TableCell>
                 ))}
                 <TableCell>
-                  <Box
-                    component="form"
-                    onSubmit={handleAddLesson}
-                    sx={{
-                      display: "flex",
-                      gap: 2,
-                      alignItems: "center",
-                      width: "100%",
-                      paddingTop: 3,
-                    }}>
-                    <DateTimePicker
-                      label="Start time"
-                      sx={{ flexGrow: 1 }}
-                      value={lessonDateTime}
-                      onChange={(dateTime) => setLessonDateTime(dateTime)}
-                    />
-                    <Button variant="text" type="submit">Dodaj</Button>
-                  </Box>
+                  {course &&
+                    <CreateLessonButton courseId={course.id}></CreateLessonButton>
+                  }
                 </TableCell>
               </TableRow>
             </TableHead>
