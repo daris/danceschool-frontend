@@ -1,4 +1,4 @@
-import { Courses } from "@/app/components/courses/Courses";
+import { Courses } from "@/app/components/Courses";
 import { Container } from "@mui/material";
 import {ProtectedRoute} from "@/app/components/ProtectedRoute";
 

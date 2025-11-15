@@ -1,6 +1,5 @@
 "use client";
 import {useEffect} from "react";
-import styles from "./Courses.module.css";
 import Link from "next/link";
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {loadCourses, selectCourses, selectStatus} from "@/lib/features/courses/coursesApiSlice";
@@ -40,7 +39,7 @@ export const Courses = () => {
 
   if (status == 'idle' && courses) {
     return (
-      <div className={styles.container}>
+      <div>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableBody>

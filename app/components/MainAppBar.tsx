@@ -24,7 +24,7 @@ interface Page {
   name: string;
 }
 const pages: Page[] = [{path: '/courses', name: 'Courses'}];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Logout'];
 
 function MainAppBar() {
   const authUser = useAppSelector(selectAuthUser);

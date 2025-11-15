@@ -1,5 +1,4 @@
 "use client";
-import styles from "./Courses.module.css";
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {
   addParticipantForCourse,
@@ -29,7 +28,7 @@ import {Attendance, AttendanceStatus,} from "@/lib/features/courses/courseAPI";
 import {Avatar, Box, LinearProgress, Typography} from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
 import dayjs from "dayjs";
-import {AttendanceStatusSelector} from "@/app/components/attendanceStatus";
+import {AttendanceStatusSelector} from "@/app/components/AttendanceStatusSelector";
 
 export const CourseEditView = (props: {id: string}) => {
   const dispatch = useAppDispatch();
@@ -91,7 +90,7 @@ export const CourseEditView = (props: {id: string}) => {
   }
 
   return (
-    <div className={styles.container} style={{position: 'relative'}}>
+    <div style={{position: 'relative'}}>
       {status == 'loading' &&
         <Box sx={{ width: '100%', position: 'absolute', zIndex: 100 }}>
           <LinearProgress />

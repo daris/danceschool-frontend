@@ -1,6 +1,6 @@
-import { Courses } from "@/app/components/courses/Courses";
+import { Courses } from "@/app/components/Courses";
 import { Container } from "@mui/material";
-import {LoginForm} from "@/app/components/loginForm";
+import {LoginForm} from "@/app/components/LoginForm";
 
 export default function CoursesPage() {
   return (
