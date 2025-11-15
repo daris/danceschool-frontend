@@ -5,7 +5,7 @@ Modern frontend for managing dance school operations, built with Next.js App Rou
 ### Features
 - **Authentication:** Login and registration forms backed by async thunks and axios interceptors, with protected routes gating private views.
 - **Course Management:** Course listings and detail pages wired for RTK Query data fetching.
-- **User Management:** Centralized Redux store with slices for users, courses, authentication, and counter examples.
+- **User Management** 
 - **Responsive UI:** Material UI components and custom styling for a polished experience.
 
 ### Tech Stack
