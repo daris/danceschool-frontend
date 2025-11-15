@@ -12,7 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {Box, LinearProgress} from "@mui/material";
 
-export const Courses = () => {
+export const CourseList = () => {
   const dispatch = useAppDispatch();
   const status = useAppSelector(selectStatus);
   const courses = useAppSelector(selectCourses);

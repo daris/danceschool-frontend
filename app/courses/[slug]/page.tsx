@@ -1,4 +1,4 @@
-import {CourseEditView} from "@/app/components/Course";
+import {CourseEditView} from "@/app/components/CourseEditView";
 import { Container } from "@mui/material";
 import {ProtectedRoute} from "@/app/components/ProtectedRoute";
 

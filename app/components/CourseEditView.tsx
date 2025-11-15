@@ -21,7 +21,6 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import {selectAvailableParticipantsForCourse} from "@/lib/selectors/availableParticipantsForCourse";
-import TableFooter from "@mui/material/TableFooter";
 import Button from "@mui/material/Button";
 import {Avatar, Box, LinearProgress, Typography} from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
