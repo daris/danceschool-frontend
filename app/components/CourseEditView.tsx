@@ -117,8 +117,7 @@ export const CourseEditView = (props: {id: string}) => {
         </Box>
       }
       <TableContainer component={Paper} ref={containerRef}>
-        <Table sx={{
-
+        <Table size="small" sx={{
           minWidth: 650,
           borderCollapse: 'collapse',
           '& th, & td': {
@@ -189,10 +188,11 @@ export const CourseEditView = (props: {id: string}) => {
                     <Box sx={{
                       display: 'flex',
                       alignItems: 'center',
-                      '& > div': {mr: 1, flexShrink: 0}
                     }}>
                       <Avatar {...stringAvatar(`${user?.firstName} ${user?.lastName}`)} />&nbsp;
-                      <Box>
+                      <Box sx={{
+                        whiteSpace: "nowrap"
+                      }}>
                         <Typography
                           variant="body1">{user?.firstName} {user?.lastName}</Typography>
                         {lastPass &&
