@@ -7,7 +7,7 @@ export default function CoursesPage() {
     <ProtectedRoute>
       <Container maxWidth="xl">
         <h1>Courses</h1>
-          <Courses />
+        <Courses />
       </Container>
     </ProtectedRoute>
   );
