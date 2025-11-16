@@ -62,7 +62,7 @@ export const CourseEditView = (props: {id: string}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollLeftRef = useRef(0); // store horizontal scroll position
 
-  const handleAttendanceStatusChange = (attendance: Attendance|undefined, lessonId: string, userId: string, newStatus: AttendanceStatus|null) => {
+  const handleAttendanceStatusChange = async (attendance: Attendance|undefined, lessonId: string, userId: string, newStatus: AttendanceStatus|null) => {
     if (containerRef.current) {
       scrollLeftRef.current = containerRef.current.scrollLeft;
     }
@@ -70,9 +70,9 @@ export const CourseEditView = (props: {id: string}) => {
     if (!course) return;
 
     if (!attendance) {
-      dispatch(createAttendance({attendance: {lessonId: lessonId, userId: userId, status: newStatus} as Attendance, courseId: course.id}));
+      await dispatch(createAttendance({attendance: {lessonId: lessonId, userId: userId, status: newStatus} as Attendance, courseId: course.id}));
     } else {
-      dispatch(updateAttendance({attendance: {...attendance, status: newStatus}, courseId: course.id}));
+      await dispatch(updateAttendance({attendance: {...attendance, status: newStatus}, courseId: course.id}));
     }
   }
 

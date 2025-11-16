@@ -1,16 +1,17 @@
 import {green, red, yellow} from "@mui/material/colors";
-import {Box, BoxProps, Menu, MenuItem, SxProps, Tooltip} from "@mui/material";
+import {Box, BoxProps, CircularProgress, Menu, MenuItem, SxProps, Tooltip} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import React, {useState} from "react";
 import {AttendanceStatus} from "@/lib/features/courses/types";
 
 interface AttendanceStatusSelectorProps extends BoxProps {
   status?: AttendanceStatus|null;
-  onStatusChange?: (newStatus: AttendanceStatus|null) => void;
+  onStatusChange?: (newStatus: AttendanceStatus|null) => Promise<any>;
 }
 
 export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> = ({status, onStatusChange, ...props}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -20,9 +21,11 @@ export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> =
     setAnchorEl(null);
   };
 
-  const handleSelect = (newStatus: AttendanceStatus|null) => {
-    onStatusChange?.(newStatus);
+  const handleSelect = async (newStatus: AttendanceStatus|null) => {
+    setLoading(true);
     handleClose();
+    await onStatusChange?.(newStatus);
+    setLoading(false);
   };
 
   let statusProps: SxProps = {
@@ -55,6 +58,9 @@ export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> =
     icon = <CheckIcon></CheckIcon>;
   }
 
+  if (loading) {
+    return <CircularProgress size={24} />;
+  }
 
   return (
     <>
