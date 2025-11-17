@@ -12,7 +12,7 @@ export const CourseList = () => {
   const courses = useAppSelector(selectCourses);
 
   useEffect(() => {
-    if (status == "initial") {
+    if (status == 'initial' || status == 'failed') {
       dispatch(loadCourses());
       dispatch(loadUsers());
     }
