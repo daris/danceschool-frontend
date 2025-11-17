@@ -2,7 +2,7 @@
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {
   addParticipantForCourse,
-  createAttendance, createLesson,
+  createAttendance,
   loadCourses,
   selectCourse,
   selectStatus,
@@ -24,13 +24,17 @@ import {selectAvailableParticipantsForCourse} from "@/lib/selectors/availablePar
 import Button from "@mui/material/Button";
 import {Avatar, Box, LinearProgress, Typography} from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
-import dayjs, {Dayjs} from "dayjs";
+import dayjs from "dayjs";
 import {AttendanceStatusSelector} from "@/app/components/AttendanceStatusSelector";
-import {Attendance, AttendanceStatus, CreateLesson, Lesson} from "@/lib/features/courses/types";
+import {Attendance, AttendanceStatus, Lesson} from "@/lib/features/courses/types";
 import {User} from "@/lib/features/users/types";
-import {DateTimePicker} from "@mui/x-date-pickers";
 import {CreateLessonButton} from "@/app/components/CreateLessonButton";
 import QRCode from "react-qr-code";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 export const CourseEditView = (props: {id: string}) => {
   const dispatch = useAppDispatch();
@@ -39,6 +43,7 @@ export const CourseEditView = (props: {id: string}) => {
   const courseWithUsers = useAppSelector((state) => selectCourseWithUsers(state, props.id));
   const availableParticipants = useAppSelector((state) => selectAvailableParticipantsForCourse(state, props.id));
   const [selectedParticipant, setSelectedParticipant] = useState<User|null>(null);
+  const [lessonDialogData, setLessonDialogData] = React.useState<{isOpen: boolean, lesson?: Lesson}>({isOpen: false});
 
   useEffect(() => {
     if (status == "initial") {
@@ -84,6 +89,14 @@ export const CourseEditView = (props: {id: string}) => {
     }
   }, [course]); // run whenever table data changes
 
+  const handleLessonDialogOpen = (lesson: Lesson) => {
+    setLessonDialogData({isOpen: true, lesson});
+  };
+
+  const handleLessonDialogClose = () => {
+    setLessonDialogData({isOpen: false});
+  };
+
 
   if (status == 'failed') {
     return (
@@ -124,7 +137,7 @@ export const CourseEditView = (props: {id: string}) => {
                 </TableCell>
                 {courseWithUsers.lessons.map(lesson => (
                   <TableCell key={lesson.id} align="center">
-                    <Box>
+                    <Box onClick={() => handleLessonDialogOpen(lesson)} style={{cursor: 'pointer'}}>
                       <Typography variant="caption">{dayjs(lesson.startTime).format("D.MM")}</Typography>
                       <Typography>{dayjs(lesson.startTime).format("HH:mm")}</Typography>
                     </Box>
@@ -226,16 +239,38 @@ export const CourseEditView = (props: {id: string}) => {
         <Button variant="text" type="submit">Dodaj</Button>
       </Box>
 
-      {course &&
-        <div style={{ height: "auto", margin: "0 auto", marginTop: 30, maxWidth: 128, width: "100%" }}>
-          <QRCode
-            size={256}
-            style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-            value={course.id}
-            viewBox={`0 0 256 256`}
-          />
-        </div>
-      }
+      <Dialog
+        open={lessonDialogData.isOpen}
+        onClose={handleLessonDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {lessonDialogData.lesson &&
+            <>
+              <Typography variant="caption">{dayjs(lessonDialogData.lesson.startTime).format("D.MM")}</Typography>
+              <Typography>{dayjs(lessonDialogData.lesson.startTime).format("HH:mm")}</Typography>
+            </>
+          }
+        </DialogTitle>
+        <DialogContent>
+          {lessonDialogData.lesson &&
+            <div style={{ height: "auto", margin: "0 auto", marginTop: 30, maxWidth: 128, width: "100%" }}>
+              <QRCode
+                size={256}
+                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                value={lessonDialogData.lesson.id}
+                viewBox={`0 0 256 256`}
+              />
+            </div>
+          }
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleLessonDialogClose} autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
 
     </div>
   );
