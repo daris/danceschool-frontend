@@ -1,5 +1,13 @@
 import api from "@/lib/api/axios";
-import {Attendance, Course, CoursesApiResponse, CreateLesson, Lesson, Participant} from "@/lib/features/courses/types";
+import {
+  Attendance,
+  Course,
+  CoursesApiResponse,
+  CreateLesson,
+  Lesson,
+  Participant,
+  QrCodeRequest
+} from "@/lib/features/courses/types";
 
 // Fetch all courses
 export const fetchCourses = async (): Promise<CoursesApiResponse> => {
@@ -51,3 +59,9 @@ export const createLessonApi = async (lesson: CreateLesson): Promise<Lesson> => 
   );
   return data;
 };
+
+export const scanQrCode = async (qrCodeRequest: QrCodeRequest): Promise<any> => {
+  const { data } = await api.post<Course>("/qr", qrCodeRequest);
+  return data;
+};
+

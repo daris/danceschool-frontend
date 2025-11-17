@@ -48,3 +48,7 @@ export interface CreateLesson {
   endTime: string;
   courseId: string;
 }
+
+export interface QrCodeRequest {
+  id: string;
+}

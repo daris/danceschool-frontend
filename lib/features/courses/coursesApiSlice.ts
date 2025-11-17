@@ -110,7 +110,6 @@ export const coursesSlice = createAppSlice({
         },
       },
     ),
-
     createCourse: create.asyncThunk(
       async (course: Course) => {
         const response = await createCourseApi(course);
@@ -129,7 +128,6 @@ export const coursesSlice = createAppSlice({
         },
       },
     ),
-
     createLesson: create.asyncThunk(
       async (lesson: CreateLesson) => {
         const lessonData = await createLessonApi(lesson);
@@ -152,7 +150,6 @@ export const coursesSlice = createAppSlice({
         },
       },
     ),
-
   }),
   selectors: {
     selectCourses: (state) => state.courses,
