@@ -30,6 +30,7 @@ import {Attendance, AttendanceStatus, CreateLesson, Lesson} from "@/lib/features
 import {User} from "@/lib/features/users/types";
 import {DateTimePicker} from "@mui/x-date-pickers";
 import {CreateLessonButton} from "@/app/components/CreateLessonButton";
+import QRCode from "react-qr-code";
 
 export const CourseEditView = (props: {id: string}) => {
   const dispatch = useAppDispatch();
@@ -224,6 +225,18 @@ export const CourseEditView = (props: {id: string}) => {
         />
         <Button variant="text" type="submit">Dodaj</Button>
       </Box>
+
+      {course &&
+        <div style={{ height: "auto", margin: "0 auto", marginTop: 30, maxWidth: 128, width: "100%" }}>
+          <QRCode
+            size={256}
+            style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+            value={course.id}
+            viewBox={`0 0 256 256`}
+          />
+        </div>
+      }
+
     </div>
   );
 };
