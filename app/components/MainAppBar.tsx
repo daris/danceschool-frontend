@@ -21,12 +21,6 @@ import {stringAvatar} from "@/lib/avatar";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "@/lib/store";
 
-interface Page {
-  path: string;
-  name: string;
-}
-const pages: Page[] = [{path: '/courses', name: 'Courses'}];
-
 function MainAppBar() {
   const authUser = useAppSelector(selectAuthUser);
   const dispatch = useDispatch<AppDispatch>();
