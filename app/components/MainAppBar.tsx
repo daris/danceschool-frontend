@@ -49,8 +49,8 @@ function MainAppBar() {
     setAnchorElUser(null);
   };
 
-  const handleNavClick = (page: Page) => {
-    router.push(page.path);
+  const handleNavClick = (path: string) => {
+    router.push(path);
     setAnchorElNav(null);
   }
 
@@ -113,11 +113,12 @@ function MainAppBar() {
                 onClose={handleCloseNavMenu}
                 sx={{ display: { xs: 'block', md: 'none' } }}
               >
-                {pages.map((page) => (
-                  <MenuItem key={page.path} onClick={() => handleNavClick(page)}>
-                    <Typography sx={{ textAlign: 'center' }}>{page.name}</Typography>
-                  </MenuItem>
-                ))}
+                <MenuItem onClick={() => handleNavClick('/qr')}>
+                  <Typography sx={{ textAlign: 'center' }}>QR Scanner</Typography>
+                </MenuItem>
+                <MenuItem onClick={() => handleNavClick('/courses')}>
+                  <Typography sx={{ textAlign: 'center' }}>Courses</Typography>
+                </MenuItem>
               </Menu>
             </Box>
           }
@@ -145,15 +146,18 @@ function MainAppBar() {
           {authUser &&
             <>
               <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                {pages.map((page) => (
-                  <Button
-                    key={page.path}
-                    onClick={() => handleNavClick(page)}
-                    sx={{ my: 2, color: 'white', display: 'block' }}
-                  >
-                    {page.name}
-                  </Button>
-                ))}
+                <Button
+                  onClick={() => handleNavClick('/qr')}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  QR Scanner
+                </Button>
+                <Button
+                  onClick={() => handleNavClick('/courses')}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Courses
+                </Button>
               </Box>
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">

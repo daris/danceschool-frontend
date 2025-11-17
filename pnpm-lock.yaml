@@ -29,6 +29,9 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^2.2.0
         version: 2.10.1(react-redux@9.2.0(@types/react@18.2.37)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
+      '@yudiel/react-qr-scanner':
+        specifier: ^2.4.1
+        version: 2.4.1(@types/emscripten@1.41.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -526,6 +529,9 @@ packages:
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
 
+  '@types/emscripten@1.41.5':
+    resolution: {integrity: sha512-cMQm7pxu6BxtHyqJ7mQZ2kXWV5SLmugybFdHCBbJ5eHzOo6VhBckEgAT3//rP5FwPHNPeEiq4SmQ5ucBwsOo4Q==}
+
   '@types/node@20.2.5':
     resolution: {integrity: sha512-JJulVEQXmiY9Px5axXHeYGLSjhkZEnD+MDPDGbCbIAbMslkKwmygtZFy1X6s/075Yo94sf8GuSlFfPzysQrWZQ==}
 
@@ -554,6 +560,12 @@ packages:
   '@types/use-sync-external-store@0.0.6':
     resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
 
+  '@yudiel/react-qr-scanner@2.4.1':
+    resolution: {integrity: sha512-O5lkVrfUR7VixJLvuIxnzANi/O+KlObPnfkJk8btGeFY+Y7pC4kv8iDQhs/Cw9KiiyD7VSJDcHUHVKsYR8/xmw==}
+    peerDependencies:
+      react: ^17 || ^18 || ^19
+      react-dom: ^17 || ^18 || ^19
+
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
@@ -563,6 +575,9 @@ packages:
   babel-plugin-macros@3.1.0:
     resolution: {integrity: sha512-Cg7TFGpIr01vOQNODXOOaGz2NpCU5gl8x1qJFbb6hbZxR7XrcE2vtbAsTAbJ7/xwJtUuJEw8K8Zr/AE0LHlesg==}
     engines: {node: '>=10', npm: '>=6'}
+
+  barcode-detector@3.0.6:
+    resolution: {integrity: sha512-v4xTr6B+FINl/p1RDl38qzIwF+Repfo+k/a/HlKTJKAJpNvACD6v7AH7LSPvfR4AdzXXuwai04huA4TWn02Znw==}
 
   call-bind-apply-helpers@1.0.2:
     resolution: {integrity: sha512-Sp1ablJ0ivDkSzjcaJdxEunN5/XvksFJ2sMBFfq6x0ryhQV/2b/KwFe21cMpmHtPOSij8K99/wSfoEuTObmuMQ==}
@@ -853,6 +868,9 @@ packages:
   scheduler@0.23.2:
     resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
 
+  sdp@3.2.1:
+    resolution: {integrity: sha512-lwsAIzOPlH8/7IIjjz3K0zYBk7aBVVcvjMwt3M4fLxpjMYyy7i3I97SLHebgn4YBjirkzfp3RvRDWSKsh/+WFw==}
+
   semver@7.7.3:
     resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
     engines: {node: '>=10'}
@@ -890,8 +908,16 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  tagged-tag@1.0.0:
+    resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
+    engines: {node: '>=20'}
+
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
+  type-fest@5.2.0:
+    resolution: {integrity: sha512-xxCJm+Bckc6kQBknN7i9fnP/xobQRsRQxR01CztFkp/h++yfVxUUcmMgfR2HttJx/dpWjS9ubVuyspJv24Q9DA==}
+    engines: {node: '>=20'}
 
   typescript@5.9.3:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
@@ -903,9 +929,18 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  webrtc-adapter@9.0.3:
+    resolution: {integrity: sha512-5fALBcroIl31OeXAdd1YUntxiZl1eHlZZWzNg3U4Fn+J9/cGL3eT80YlrsWGvj2ojuz1rZr2OXkgCzIxAZ7vRQ==}
+    engines: {node: '>=6.0.0', npm: '>=3.10.0'}
+
   yaml@1.10.2:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
+
+  zxing-wasm@2.2.2:
+    resolution: {integrity: sha512-Q9/B9whEwAUABvr7ScHl36wVZTBWVHAaumx45uGQLl2GGRp5ZRtDtwbz5scOwl/xzL07fximIqoQqqmzf9eJJA==}
+    peerDependencies:
+      '@types/emscripten': '>=1.39.6'
 
 snapshots:
 
@@ -1331,6 +1366,8 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@types/emscripten@1.41.5': {}
+
   '@types/node@20.2.5': {}
 
   '@types/parse-json@4.0.2': {}
@@ -1355,6 +1392,15 @@ snapshots:
 
   '@types/use-sync-external-store@0.0.6': {}
 
+  '@yudiel/react-qr-scanner@2.4.1(@types/emscripten@1.41.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      barcode-detector: 3.0.6(@types/emscripten@1.41.5)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      webrtc-adapter: 9.0.3
+    transitivePeerDependencies:
+      - '@types/emscripten'
+
   asynckit@0.4.0: {}
 
   axios@1.13.2:
@@ -1370,6 +1416,12 @@ snapshots:
       '@babel/runtime': 7.28.4
       cosmiconfig: 7.1.0
       resolve: 1.22.11
+
+  barcode-detector@3.0.6(@types/emscripten@1.41.5):
+    dependencies:
+      zxing-wasm: 2.2.2(@types/emscripten@1.41.5)
+    transitivePeerDependencies:
+      - '@types/emscripten'
 
   call-bind-apply-helpers@1.0.2:
     dependencies:
@@ -1636,6 +1688,8 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
+  sdp@3.2.1: {}
+
   semver@7.7.3:
     optional: true
 
@@ -1684,7 +1738,13 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
+  tagged-tag@1.0.0: {}
+
   tslib@2.8.1: {}
+
+  type-fest@5.2.0:
+    dependencies:
+      tagged-tag: 1.0.0
 
   typescript@5.9.3: {}
 
@@ -1692,4 +1752,13 @@ snapshots:
     dependencies:
       react: 18.3.1
 
+  webrtc-adapter@9.0.3:
+    dependencies:
+      sdp: 3.2.1
+
   yaml@1.10.2: {}
+
+  zxing-wasm@2.2.2(@types/emscripten@1.41.5):
+    dependencies:
+      '@types/emscripten': 1.41.5
+      type-fest: 5.2.0
