@@ -1,6 +1,7 @@
 import {createAppSlice} from "@/lib/createAppSlice";
 import {fetchUsers} from "@/lib/features/users/usersAPI";
 import {User} from "@/lib/features/users/types";
+import {logout} from "@/lib/features/auth/authSlice";
 
 export interface UserSliceState {
   users: User[];
@@ -39,6 +40,9 @@ export const usersSlice = createAppSlice({
     selectUsers: (state) => state.users,
     selectUser: (state, courseId: string) => state.users.find(course => course.id == courseId),
     selectStatus: (counter) => counter.status,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(logout, () => initialState);
   },
 });
 

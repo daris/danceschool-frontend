@@ -6,6 +6,7 @@ import {
   updateAttendanceApi
 } from "@/lib/features/courses/courseAPI";
 import {Attendance, Course, CreateLesson, Lesson, Participant} from "@/lib/features/courses/types";
+import {logout} from "@/lib/features/auth/authSlice";
 
 export interface CourseSliceState {
   courses: Course[];
@@ -155,6 +156,9 @@ export const coursesSlice = createAppSlice({
     selectCourses: (state) => state.courses,
     selectCourse: (state, courseId: string) => state.courses.find(course => course.id == courseId),
     selectStatus: (counter) => counter.status,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(logout, () => initialState);
   },
 });
 
