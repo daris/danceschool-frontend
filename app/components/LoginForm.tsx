@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/lib/features/auth/authSlice";
 import { RootState, AppDispatch } from "@/lib/store";
-import { Box, TextField, Button, Typography, CircularProgress } from "@mui/material";
+import { Box, TextField, Button, Typography, CircularProgress, Alert } from "@mui/material";
 import {useRouter} from "next/navigation";
 
 export const LoginForm: React.FC = () => {
@@ -50,7 +50,7 @@ export const LoginForm: React.FC = () => {
         onChange={(e) => setPassword(e.target.value)}
         sx={{ mb: 2 }}
       />
-      {error && <Typography color="error" sx={{ mb: 1 }}>{error}</Typography>}
+      {error && <Alert severity="error" sx={{ mb: 1 }}>{error}</Alert>}
       <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
         {loading ? <CircularProgress size={24} /> : "Sign In"}
       </Button>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {loadCourses, selectCourses, selectStatus} from "@/lib/features/courses/coursesApiSlice";
 import {loadUsers} from "@/lib/features/users/usersApiSlice";
-import {Box, LinearProgress, List, ListItem, ListItemButton} from "@mui/material";
+import {Alert, Box, LinearProgress, List, ListItem, ListItemButton} from "@mui/material";
 
 export const CourseList = () => {
   const dispatch = useAppDispatch();
@@ -20,9 +20,7 @@ export const CourseList = () => {
 
   if (status == 'failed') {
     return (
-      <div>
-        <h1>There was an error!!!</h1>
-      </div>
+      <Alert severity="error">Failed to load courses.</Alert>
     );
   }
 

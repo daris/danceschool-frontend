@@ -8,7 +8,6 @@ import {scanQrCode} from "@/lib/features/courses/courseAPI";
 import {QrCodeRequest} from "@/lib/features/courses/types";
 import {useRouter} from "next/navigation";
 
-
 export default function QrScanner() {
   const [value, setValue] = React.useState<string>('');
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -26,7 +25,7 @@ export default function QrScanner() {
       return;
     }
     setLoading(false);
-    // router.push('/');
+    router.push('/');
   }
 
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
