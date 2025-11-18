@@ -4,12 +4,12 @@ import {User} from "@/lib/features/users/types";
 
 export interface UserSliceState {
   users: User[];
-  status: "idle" | "loading" | "failed";
+  status: "initial" | "idle" | "loading" | "failed";
 }
 
 const initialState: UserSliceState = {
   users: [],
-  status: "loading",
+  status: "initial",
 };
 
 export const usersSlice = createAppSlice({

@@ -113,6 +113,9 @@ function MainAppBar() {
                 <MenuItem onClick={() => handleNavClick('/courses')}>
                   <Typography sx={{ textAlign: 'center' }}>Courses</Typography>
                 </MenuItem>
+                <MenuItem onClick={() => handleNavClick('/users')}>
+                  <Typography sx={{ textAlign: 'center' }}>Users</Typography>
+                </MenuItem>
               </Menu>
             </Box>
           }
@@ -140,18 +143,10 @@ function MainAppBar() {
           {authUser &&
             <>
               <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                <Button
-                  onClick={() => handleNavClick('/qr')}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  QR Scanner
-                </Button>
-                <Button
-                  onClick={() => handleNavClick('/courses')}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  Courses
-                </Button>
+                <Button onClick={() => handleNavClick('/qr')} sx={{ my: 2, color: 'white', display: 'block' }}>QR Scanner</Button>
+                <Button onClick={() => handleNavClick('/courses')} sx={{ my: 2, color: 'white', display: 'block' }}>Courses</Button>
+                <Button onClick={() => handleNavClick('/users')} sx={{ my: 2, color: 'white', display: 'block' }}>Users</Button>
+
               </Box>
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
