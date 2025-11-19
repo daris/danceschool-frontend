@@ -6,6 +6,7 @@ import { login } from "@/lib/features/auth/authSlice";
 import { RootState, AppDispatch } from "@/lib/store";
 import { Box, TextField, Button, Typography, CircularProgress, Alert } from "@mui/material";
 import {useRouter} from "next/navigation";
+import Link from "next/link";
 
 export const LoginForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -54,6 +55,8 @@ export const LoginForm: React.FC = () => {
       <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
         {loading ? <CircularProgress size={24} /> : "Sign In"}
       </Button>
+
+      <Button component={Link} href="/register" fullWidth sx={{mt: 2}}>Register</Button>
     </Box>
   );
 };
