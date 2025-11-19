@@ -6,7 +6,7 @@ import {
   loadCourses,
   selectCourse,
   selectStatus,
-  updateAttendance
+  updateAttendance, updateAttendanceLocally
 } from "@/lib/features/courses/coursesApiSlice";
 import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
 import React, {FormEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
@@ -100,7 +100,7 @@ export const CourseEditView = (props: {id: string}) => {
   if (course) {
     useCourseAttendanceUpdates(course.id, (update) => {
       console.log("Attendance update received:", update);
-      // dispatch(updateAttendanceLocally(update)); // Optimized update
+      dispatch(updateAttendanceLocally(update)); // Optimized update
     });
   }
 

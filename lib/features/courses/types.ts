@@ -57,3 +57,11 @@ export interface QrCodeRequest {
 export interface QrCodeResponse {
   message: string;
 }
+
+export interface CourseUpdateAttendances {
+  courseId: string;
+  attendanceId: string;
+  lessonId: string;
+  userId: string;
+  status: AttendanceStatus;
+}

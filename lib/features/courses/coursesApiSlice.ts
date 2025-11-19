@@ -5,8 +5,16 @@ import {
   fetchCourses,
   updateAttendanceApi
 } from "@/lib/features/courses/courseAPI";
-import {Attendance, Course, CreateLesson, Lesson, Participant} from "@/lib/features/courses/types";
+import {
+  Attendance,
+  Course,
+  CourseUpdateAttendances,
+  CreateLesson,
+  Lesson,
+  Participant
+} from "@/lib/features/courses/types";
 import {logout} from "@/lib/features/auth/authSlice";
+import {PayloadAction} from "@reduxjs/toolkit";
 
 export interface CourseSliceState {
   courses: Course[];
@@ -151,6 +159,15 @@ export const coursesSlice = createAppSlice({
         },
       },
     ),
+    updateAttendanceLocally: create.reducer((state, action: PayloadAction<CourseUpdateAttendances>) =>  {
+      const attendance = {id: action.payload.attendanceId, lessonId: action.payload.lessonId, userId: action.payload.userId, status: action.payload.status} as Attendance;
+      const course = state.courses.find(course => course.id == action.payload.courseId);
+      const lesson = course?.lessons.find(lesson => lesson.id == action.payload.lessonId);
+      if (lesson) {
+        lesson.attendances = lesson.attendances.filter(l => l.userId != action.payload.userId);
+        lesson.attendances.push(attendance);
+      }
+    }),
   }),
   selectors: {
     selectCourses: (state) => state.courses,
@@ -162,5 +179,5 @@ export const coursesSlice = createAppSlice({
   },
 });
 
-export const { loadCourses, addParticipantForCourse, updateAttendance, createAttendance, createCourse, createLesson } = coursesSlice.actions;
+export const { loadCourses, addParticipantForCourse, updateAttendance, createAttendance, createCourse, createLesson, updateAttendanceLocally } = coursesSlice.actions;
 export const { selectCourses, selectStatus, selectCourse } = coursesSlice.selectors;
