@@ -47,13 +47,12 @@ export const RegistrationForm: React.FC = () => {
       // TODO: Replace with your registration API call
       await api.post("/auth/register", formData);
 
-      console.log("Submitting:", formData);
       setSuccess(true);
 
       // Redirect after successful registration
       setTimeout(() => router.push("/login"), 1500);
     } catch (err: any) {
-      setError(err.message || "Registration failed");
+      setError(err.response.data?.message || "Registration failed");
     } finally {
       setLoading(false);
     }
