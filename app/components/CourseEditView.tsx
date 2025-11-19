@@ -105,7 +105,6 @@ export const CourseEditView = (props: {id: string}) => {
   }
 
 
-
   if (status == 'failed') {
     return (
       <div>

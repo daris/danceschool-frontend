@@ -3,7 +3,7 @@ import {store} from "@/lib/store";
 import {logout} from "@/lib/features/auth/authSlice";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/",
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/",
   headers: { "Content-Type": "application/json" },
 });
 
