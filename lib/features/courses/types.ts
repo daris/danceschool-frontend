@@ -51,4 +51,9 @@ export interface CreateLesson {
 
 export interface QrCodeRequest {
   id: string;
+  type: 'lesson' | 'pass';
+}
+
+export interface QrCodeResponse {
+  message: string;
 }

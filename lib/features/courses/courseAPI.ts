@@ -6,7 +6,7 @@ import {
   CreateLesson,
   Lesson,
   Participant,
-  QrCodeRequest
+  QrCodeRequest, QrCodeResponse
 } from "@/lib/features/courses/types";
 
 // Fetch all courses
@@ -60,8 +60,8 @@ export const createLessonApi = async (lesson: CreateLesson): Promise<Lesson> => 
   return data;
 };
 
-export const scanQrCode = async (qrCodeRequest: QrCodeRequest): Promise<any> => {
-  const { data } = await api.post<Course>("/qr", qrCodeRequest);
+export const scanQrCode = async (qrCodeRequest: QrCodeRequest): Promise<QrCodeResponse> => {
+  const { data } = await api.post<QrCodeResponse>("/qr", qrCodeRequest);
   return data;
 };
 

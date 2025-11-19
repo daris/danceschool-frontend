@@ -258,7 +258,7 @@ export const CourseEditView = (props: {id: string}) => {
               <QRCode
                 size={256}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={lessonDialogData.lesson.id}
+                value={JSON.stringify({id: lessonDialogData.lesson.id, type: 'lesson'})}
                 viewBox={`0 0 256 256`}
               />
             </div>
