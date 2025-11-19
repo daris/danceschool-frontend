@@ -34,6 +34,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import {useCourseAttendanceUpdates} from "@/app/components/useCourseAttendanceUpdates";
 
 export const CourseEditView = (props: {id: string}) => {
   const dispatch = useAppDispatch();
@@ -95,6 +96,14 @@ export const CourseEditView = (props: {id: string}) => {
   const handleLessonDialogClose = () => {
     setLessonDialogData({isOpen: false});
   };
+
+  if (course) {
+    useCourseAttendanceUpdates(course.id, (update) => {
+      console.log("Attendance update received:", update);
+      // dispatch(updateAttendanceLocally(update)); // Optimized update
+    });
+  }
+
 
 
   if (status == 'failed') {

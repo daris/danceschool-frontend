@@ -62,7 +62,7 @@ export default function QrScanner() {
       <Box sx={{display: 'flex'}}>
         {loading && <CircularProgress />}
 
-        <Button onClick={() => handleQrCodeScan({id: 'bf765b87-743e-4af3-8e69-24dea917fe3d', type: 'LESSON'})}>Example lesson</Button>
+        <Button onClick={() => handleQrCodeScan({id: '72067907-bdaa-4312-ab3b-e470cbf64e30', type: 'LESSON'})}>Example lesson</Button>
         <Button onClick={() => handleQrCodeScan({id: 'bf765b87-743e-4af3-8e69-24dea917fe3d', type: 'PASS'})}>Example pass</Button>
       </Box>
 
