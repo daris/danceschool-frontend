@@ -22,6 +22,7 @@ export default function QrScanner() {
       setSnackbarData({isOpen: true, message: qrCodeResponse.message});
     } catch (error: any) {
       setSnackbarData({isOpen: true, message: error.response.data.message});
+      setLoading(false);
       return;
     }
     setLoading(false);
@@ -61,8 +62,8 @@ export default function QrScanner() {
       <Box sx={{display: 'flex'}}>
         {loading && <CircularProgress />}
 
-        <Button onClick={() => handleQrCodeScan({id: 'bf765b87-743e-4af3-8e69-24dea917fe3d', type: 'lesson'})}>Example lesson</Button>
-        <Button onClick={() => handleQrCodeScan({id: 'bf765b87-743e-4af3-8e69-24dea917fe3d', type: 'pass'})}>Example pass</Button>
+        <Button onClick={() => handleQrCodeScan({id: 'bf765b87-743e-4af3-8e69-24dea917fe3d', type: 'LESSON'})}>Example lesson</Button>
+        <Button onClick={() => handleQrCodeScan({id: 'bf765b87-743e-4af3-8e69-24dea917fe3d', type: 'PASS'})}>Example pass</Button>
       </Box>
 
       <Scanner styles={{container: {maxHeight: 'calc(100vh - 68px)'}}}
