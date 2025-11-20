@@ -6,7 +6,7 @@ let stompClient: Client | null = null;
 export function getStompClient(): Client {
   if (!stompClient) {
     stompClient = new Client({
-      webSocketFactory: () => new SockJS(process.env.NEXT_PUBLIC_WS_URL || "http://localhost:8080/ws"),
+      webSocketFactory: () => new SockJS(process.env.NEXT_PUBLIC_WS_URL || "/ws"),
       reconnectDelay: 5000, // auto reconnect
       debug: () => {}, // disable logs
     });
