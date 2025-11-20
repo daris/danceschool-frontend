@@ -26,7 +26,7 @@ import {Avatar, Box, LinearProgress, Typography} from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
 import dayjs from "dayjs";
 import {AttendanceStatusSelector} from "@/app/components/AttendanceStatusSelector";
-import {Attendance, AttendanceStatus, Lesson} from "@/lib/features/courses/types";
+import {Attendance, AttendanceStatus, CourseUpdateAttendances, Lesson} from "@/lib/features/courses/types";
 import {User} from "@/lib/features/users/types";
 import {CreateLessonButton} from "@/app/components/CreateLessonButton";
 import QRCode from "react-qr-code";
@@ -34,7 +34,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import {useCourseAttendanceUpdates} from "@/app/components/useCourseAttendanceUpdates";
+import {useStompSubscription} from "@/app/components/useStompSubscription";
 
 export const CourseEditView = (props: {id: string}) => {
   const dispatch = useAppDispatch();
@@ -75,11 +75,11 @@ export const CourseEditView = (props: {id: string}) => {
 
     if (!course) return;
 
-    if (!attendance) {
-      await dispatch(createAttendance({attendance: {lessonId: lessonId, userId: userId, status: newStatus} as Attendance, courseId: course.id}));
-    } else {
-      await dispatch(updateAttendance({attendance: {...attendance, status: newStatus}, courseId: course.id}));
-    }
+    // if (!attendance) {
+    await dispatch(createAttendance({attendance: {lessonId: lessonId, userId: userId, status: newStatus} as Attendance}));
+    // } else {
+    //   await dispatch(updateAttendance({attendance: {...attendance, status: newStatus}, courseId: course.id}));
+    // }
   }
 
   // Restore scroll position after render
@@ -97,13 +97,10 @@ export const CourseEditView = (props: {id: string}) => {
     setLessonDialogData({isOpen: false});
   };
 
-  if (course) {
-    useCourseAttendanceUpdates(course.id, (update) => {
-      console.log("Attendance update received:", update);
-      dispatch(updateAttendanceLocally(update)); // Optimized update
-    });
-  }
-
+  useStompSubscription<CourseUpdateAttendances>(course ? `/topic/courses/${course.id}/attendances` : '', (update) => {
+    console.log("Received attendance update:", update);
+    dispatch(updateAttendanceLocally(update));
+  });
 
   if (status == 'failed') {
     return (

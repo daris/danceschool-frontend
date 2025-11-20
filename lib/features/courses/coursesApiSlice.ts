@@ -1,8 +1,10 @@
 import {createAppSlice} from "@/lib/createAppSlice";
 import {
   addParticipant,
-  createAttendanceApi, createCourseApi, createLessonApi,
+  createCourseApi,
+  createLessonApi,
   fetchCourses,
+  setAttendanceStatusApi,
   updateAttendanceApi
 } from "@/lib/features/courses/courseAPI";
 import {
@@ -95,29 +97,29 @@ export const coursesSlice = createAppSlice({
       },
     ),
     createAttendance: create.asyncThunk(
-      async (params: {attendance: Attendance, courseId: string}) => {
-        const attendance = await createAttendanceApi(params.attendance);
+      async (params: {attendance: Attendance}) => {
+        const attendance = await setAttendanceStatusApi(params.attendance);
 
-        return {attendance: {...params.attendance, id: attendance.id}, courseId: params.courseId};
+        return {attendance: {...params.attendance, id: attendance.id}};
       },
-      {
-        pending: (state) => {
-          state.status = "loading";
-        },
-        fulfilled: (state, action) => {
-          state.status = "idle";
-
-          const attendance = action.payload.attendance;
-          const course = state.courses.find(course => course.id == action.payload.courseId);
-          const lesson = course?.lessons.find(lesson => lesson.id == action.payload.attendance.lessonId);
-          if (lesson) {
-            lesson.attendances.push(attendance);
-          }
-        },
-        rejected: (state) => {
-          state.status = "failed";
-        },
-      },
+      // {
+      //   pending: (state) => {
+      //     state.status = "loading";
+      //   },
+      //   fulfilled: (state, action) => {
+      //     state.status = "idle";
+      //
+      //     // const attendance = action.payload.attendance;
+      //     // const course = state.courses.find(course => course.id == action.payload.courseId);
+      //     // const lesson = course?.lessons.find(lesson => lesson.id == action.payload.attendance.lessonId);
+      //     // if (lesson) {
+      //     //   lesson.attendances.push(attendance);
+      //     // }
+      //   },
+      //   rejected: (state) => {
+      //     state.status = "failed";
+      //   },
+      // },
     ),
     createCourse: create.asyncThunk(
       async (course: Course) => {
