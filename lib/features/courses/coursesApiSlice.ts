@@ -83,9 +83,13 @@ export const coursesSlice = createAppSlice({
         fulfilled: (state, action) => {
           const attendance = action.payload.attendance;
           const course = state.courses.find(course => course.id == action.payload.courseId);
-          const lesson = course?.lessons.find(lesson => lesson.id == action.payload.attendance.lessonId);
-          if (lesson) {
-            lesson.attendances = lesson.attendances.filter(l => l.userId != action.payload.attendance.userId);
+          const lesson = course?.lessons.find(lesson => lesson.id == attendance.lessonId);
+          if (!lesson) return;
+
+          const index = lesson.attendances.findIndex((a) => a.userId === attendance.userId);
+          if (index !== -1) {
+            lesson.attendances[index] = attendance;
+          } else {
             lesson.attendances.push(attendance);
           }
         },
@@ -135,8 +139,12 @@ export const coursesSlice = createAppSlice({
       const attendance = {id: action.payload.attendanceId, lessonId: action.payload.lessonId, userId: action.payload.userId, status: action.payload.status} as Attendance;
       const course = state.courses.find(course => course.id == action.payload.courseId);
       const lesson = course?.lessons.find(lesson => lesson.id == action.payload.lessonId);
-      if (lesson) {
-        lesson.attendances = lesson.attendances.filter(l => l.userId != action.payload.userId);
+      if (!lesson) return;
+
+      const index = lesson.attendances.findIndex((a) => a.userId === attendance.userId);
+      if (index !== -1) {
+        lesson.attendances[index] = attendance;
+      } else {
         lesson.attendances.push(attendance);
       }
     }),

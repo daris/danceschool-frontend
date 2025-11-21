@@ -44,9 +44,7 @@ export const RegistrationForm: React.FC = () => {
     setError(null);
 
     try {
-      // TODO: Replace with your registration API call
       await api.post("/auth/register", formData);
-
       setSuccess(true);
 
       // Redirect after successful registration
