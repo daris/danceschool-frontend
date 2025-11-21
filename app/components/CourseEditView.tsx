@@ -2,11 +2,11 @@
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {
   addParticipantForCourse,
-  createAttendance,
   loadCourses,
   selectCourse,
   selectStatus,
-  updateAttendance, updateAttendanceLocally
+  setAttendanceStatus,
+  updateAttendanceLocally
 } from "@/lib/features/courses/coursesApiSlice";
 import {selectCourseWithUsers} from "@/lib/selectors/courseUsers";
 import React, {FormEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
@@ -68,18 +68,17 @@ export const CourseEditView = (props: {id: string}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollLeftRef = useRef(0); // store horizontal scroll position
 
-  const handleAttendanceStatusChange = async (attendance: Attendance|undefined, lessonId: string, userId: string, newStatus: AttendanceStatus|null) => {
+  const storeScrollPosition = () => {
     if (containerRef.current) {
       scrollLeftRef.current = containerRef.current.scrollLeft;
     }
+  }
 
+  const handleAttendanceStatusChange = async (attendance: Attendance|undefined, lessonId: string, userId: string, newStatus: AttendanceStatus|null) => {
+    storeScrollPosition();
     if (!course) return;
 
-    // if (!attendance) {
-    await dispatch(createAttendance({attendance: {lessonId: lessonId, userId: userId, status: newStatus} as Attendance}));
-    // } else {
-    //   await dispatch(updateAttendance({attendance: {...attendance, status: newStatus}, courseId: course.id}));
-    // }
+    await dispatch(setAttendanceStatus({attendance: {lessonId: lessonId, userId: userId, status: newStatus} as Attendance, courseId: course.id}));
   }
 
   // Restore scroll position after render
@@ -99,6 +98,7 @@ export const CourseEditView = (props: {id: string}) => {
 
   useStompSubscription<CourseUpdateAttendances>(course ? `/topic/courses/${course.id}/attendances` : '', (update) => {
     console.log("Received attendance update:", update);
+    storeScrollPosition();
     dispatch(updateAttendanceLocally(update));
   });
 

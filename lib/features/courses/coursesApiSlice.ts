@@ -70,19 +70,17 @@ export const coursesSlice = createAppSlice({
         },
       },
     ),
-    updateAttendance: create.asyncThunk(
+    setAttendanceStatus: create.asyncThunk(
       async (params: {attendance: Attendance, courseId: string}) => {
-        await updateAttendanceApi(params.attendance);
+        const attendance = await setAttendanceStatusApi(params.attendance);
 
-        return {attendance: params.attendance, courseId: params.courseId};
+        return {attendance: {
+          ...params.attendance,
+          id: attendance.id
+        }, courseId: params.courseId};
       },
       {
-        pending: (state) => {
-          state.status = "loading";
-        },
         fulfilled: (state, action) => {
-          state.status = "idle";
-
           const attendance = action.payload.attendance;
           const course = state.courses.find(course => course.id == action.payload.courseId);
           const lesson = course?.lessons.find(lesson => lesson.id == action.payload.attendance.lessonId);
@@ -91,35 +89,7 @@ export const coursesSlice = createAppSlice({
             lesson.attendances.push(attendance);
           }
         },
-        rejected: (state) => {
-          state.status = "failed";
-        },
       },
-    ),
-    createAttendance: create.asyncThunk(
-      async (params: {attendance: Attendance}) => {
-        const attendance = await setAttendanceStatusApi(params.attendance);
-
-        return {attendance: {...params.attendance, id: attendance.id}};
-      },
-      // {
-      //   pending: (state) => {
-      //     state.status = "loading";
-      //   },
-      //   fulfilled: (state, action) => {
-      //     state.status = "idle";
-      //
-      //     // const attendance = action.payload.attendance;
-      //     // const course = state.courses.find(course => course.id == action.payload.courseId);
-      //     // const lesson = course?.lessons.find(lesson => lesson.id == action.payload.attendance.lessonId);
-      //     // if (lesson) {
-      //     //   lesson.attendances.push(attendance);
-      //     // }
-      //   },
-      //   rejected: (state) => {
-      //     state.status = "failed";
-      //   },
-      // },
     ),
     createCourse: create.asyncThunk(
       async (course: Course) => {
@@ -181,5 +151,5 @@ export const coursesSlice = createAppSlice({
   },
 });
 
-export const { loadCourses, addParticipantForCourse, updateAttendance, createAttendance, createCourse, createLesson, updateAttendanceLocally } = coursesSlice.actions;
+export const { loadCourses, addParticipantForCourse, setAttendanceStatus, createCourse, createLesson, updateAttendanceLocally } = coursesSlice.actions;
 export const { selectCourses, selectStatus, selectCourse } = coursesSlice.selectors;
