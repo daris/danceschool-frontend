@@ -1,9 +1,10 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "@/lib/api/axios";
 import {AuthState} from "@/lib/features/auth/types";
+import {getAuthToken} from "@/lib/getAuthToken";
 
 const initialState: AuthState = {
-  token: typeof window !== "undefined" ? localStorage.getItem("accessToken") : null,
+  token: getAuthToken(),
   user: typeof window !== "undefined"
     ? JSON.parse(localStorage.getItem("user") || "null")
     : null,
@@ -17,6 +18,14 @@ export const login = createAsyncThunk(
   async ({ username, password }: { username: string; password: string }, thunkAPI) => {
     try {
       const resp = await api.post("/auth/login", { username, password });
+
+      // Set cookie using Next.js API
+      await fetch("/backend/auth/set-cookie", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: resp.data.accessToken }),
+      });
+
       return resp.data; // { accessToken, user }
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response?.data?.message || "Login failed");
