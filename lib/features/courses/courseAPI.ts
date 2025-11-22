@@ -17,10 +17,7 @@ export const fetchCourses = async (): Promise<Course[]> => {
 
 // Add participant to a course
 export const addParticipant = async (userId: string, courseId: string): Promise<Participant> => {
-  const { data } = await api.post<Participant>("/participants", {
-    user: `/users/${userId}`,
-    course: `/courses/${courseId}`,
-  });
+  const { data } = await api.post<Participant>("/participants", {userId, courseId});
   return data;
 };
 
