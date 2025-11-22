@@ -37,12 +37,7 @@ export const createCourseApi = async (course: Course): Promise<Course> => {
 
 
 export const createLessonApi = async (lesson: CreateLesson): Promise<Lesson> => {
-  const { data } = await api.post<Lesson>("/lessons",
-    {
-      ...lesson,
-      course: `/courses/${lesson.courseId}`,
-    }
-  );
+  const { data } = await api.post<Lesson>("/lessons", lesson);
   return data;
 };
 
