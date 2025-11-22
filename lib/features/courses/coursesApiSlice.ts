@@ -4,8 +4,7 @@ import {
   createCourseApi,
   createLessonApi,
   fetchCourses,
-  setAttendanceStatusApi,
-  updateAttendanceApi
+  setAttendanceStatusApi
 } from "@/lib/features/courses/courseAPI";
 import {
   Attendance,
@@ -35,7 +34,7 @@ export const coursesSlice = createAppSlice({
     loadCourses: create.asyncThunk(
       async () => {
         const response = await fetchCourses();
-        return response._embedded.courses;
+        return response;
       },
       {
         pending: (state) => {

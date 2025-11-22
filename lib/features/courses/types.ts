@@ -32,17 +32,6 @@ export interface Course {
   participants: Participant[];
 }
 
-export interface EmbeddedCourses {
-  courses: Course[];
-}
-
-export interface CoursesApiResponse {
-  _embedded: EmbeddedCourses;
-  total: number;
-  skip: number;
-  limit: number;
-}
-
 export interface CreateLesson {
   startTime: string;
   endTime: string;
