@@ -20,7 +20,7 @@ export const usersSlice = createAppSlice({
     loadUsers: create.asyncThunk(
       async () => {
         const response = await fetchUsers();
-        return response._embedded.users;
+        return response;
       },
       {
         pending: (state) => {

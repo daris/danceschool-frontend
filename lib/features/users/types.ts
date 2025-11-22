@@ -12,14 +12,3 @@ export interface User {
   lastName: string;
   passes: UserPass[];
 }
-
-export interface EmbeddedUsers {
-  users: User[];
-}
-
-export interface UsersApiResponse {
-  _embedded: EmbeddedUsers;
-  total: number;
-  skip: number;
-  limit: number;
-}
