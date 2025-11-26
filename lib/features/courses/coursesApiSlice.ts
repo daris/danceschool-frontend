@@ -95,20 +95,16 @@ export const coursesSlice = createAppSlice({
       },
     ),
     createCourse: create.asyncThunk(
-      async (course: Course) => {
-        const response = await createCourseApi(course);
-        return response;
+      async (course: Course, { rejectWithValue }) => {
+        try {
+          return await createCourseApi(course);
+        } catch (err: any) {
+          return rejectWithValue(err.message);
+        }
       },
       {
-        pending: (state) => {
-          state.status = "loading";
-        },
         fulfilled: (state, action) => {
-          state.status = "idle";
           state.courses.push(action.payload);
-        },
-        rejected: (state) => {
-          state.status = "failed";
         },
       },
     ),
