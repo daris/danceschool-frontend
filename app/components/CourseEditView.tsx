@@ -224,7 +224,7 @@ export const CourseEditView = (props: {id: string}) => {
           getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
           value={selectedParticipant}
           onChange={(event, newValue) => setSelectedParticipant(newValue)}
-          renderInput={(params) => <TextField {...params} label="Dodaj uczestnika" />}
+          renderInput={(params) => <TextField {...params} label="Add participant" />}
           renderOption={(props, option) => {
             const { key, ...optionProps } = props;
             return (
@@ -240,7 +240,7 @@ export const CourseEditView = (props: {id: string}) => {
             );
           }}
         />
-        <Button variant="text" type="submit">Dodaj</Button>
+        <Button variant="text" type="submit">Add</Button>
       </Box>
 
       <Dialog
