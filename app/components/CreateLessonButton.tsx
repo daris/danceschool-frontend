@@ -1,13 +1,13 @@
 "use client";
 
-import React, {FormEvent} from "react";
-import {Box, Button, CircularProgress} from "@mui/material";
+import React, {FormEvent, useState} from "react";
+import {Alert, Box, Button, CircularProgress, Typography} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "@/lib/store";
 import {DateTimePicker} from "@mui/x-date-pickers";
 import Modal from '@mui/material/Modal';
 import {Dayjs} from "dayjs";
-import {createLesson} from "@/lib/features/courses/coursesApiSlice";
+import {createCourse, createLesson} from "@/lib/features/courses/coursesApiSlice";
 import {CreateLesson} from "@/lib/features/courses/types";
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
@@ -32,6 +32,7 @@ export const CreateLessonButton: React.FC<CreateLessonButtonProps> = ({courseId}
   const dispatch = useDispatch<AppDispatch>();
   const [selectedDateTime, setSelectedDateTime] = React.useState<Dayjs | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [error, setError] = useState('');
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -42,16 +43,24 @@ export const CreateLessonButton: React.FC<CreateLessonButtonProps> = ({courseId}
 
     setLoading(true);
 
-    // const course: Course = {name: name} as Course;
-    await dispatch(createLesson({
+    const result = await dispatch(createLesson({
       startTime: selectedDateTime?.toISOString(),
       endTime: selectedDateTime?.toISOString(), // todo: fixme
       courseId: courseId
     } as CreateLesson));
 
+    if (createLesson.rejected.match(result)) {
+      setError(result.payload as string);
+      console.error("Error creating lesson:", result.payload);
+
+      setLoading(false);
+      return;
+    }
+
     setLoading(false);
     setSelectedDateTime(null);
     setOpen(false);
+    setError('');
   };
 
   return (
@@ -64,17 +73,25 @@ export const CreateLessonButton: React.FC<CreateLessonButtonProps> = ({courseId}
         onClose={handleClose}
       >
         <Box sx={style}>
-          <form onSubmit={handleSubmit}>
+          <Box component="form" onSubmit={handleSubmit}>
+            <Typography variant="h5" sx={{ mb: 2 }}>Create new lesson</Typography>
+
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
+
             <DateTimePicker
               label="Start time"
-              // sx={{ flexGrow: 1 }}
+              sx={{ width: '100%', mb: 2 }}
               value={selectedDateTime}
               onChange={(dateTime) => setSelectedDateTime(dateTime)}
             />
-            <Button variant="contained" size="medium" type="submit" disabled={loading}>
+            <Button variant="contained" size="medium" type="submit" fullWidth disabled={loading || !selectedDateTime}>
               {loading ? <CircularProgress size={24} /> : "Create"}
             </Button>
-          </form>
+          </Box>
         </Box>
       </Modal>
     </div>

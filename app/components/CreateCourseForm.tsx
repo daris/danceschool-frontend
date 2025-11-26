@@ -36,6 +36,7 @@ export default function CreateCourseForm() {
 
     setLoading(false);
     setName("");
+    setError('');
   };
 
   return (

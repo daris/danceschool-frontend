@@ -109,24 +109,19 @@ export const coursesSlice = createAppSlice({
       },
     ),
     createLesson: create.asyncThunk(
-      async (lesson: CreateLesson) => {
-        const lessonData = await createLessonApi(lesson);
-
-        return {lesson: {...lesson, ...lessonData, attendances: []} as Lesson};
+      async (lesson: CreateLesson, { rejectWithValue }) => {
+        try {
+          const lessonData = await createLessonApi(lesson);
+          return {lesson: {...lesson, ...lessonData, attendances: []} as Lesson};
+        } catch (err: any) {
+          return rejectWithValue(err.message);
+        }
       },
       {
-        pending: (state) => {
-          state.status = "loading";
-        },
         fulfilled: (state, action) => {
-          state.status = "idle";
-
           const lesson = action.payload.lesson;
           const course = state.courses.find(course => course.id == action.payload.lesson.courseId);
           course?.lessons.push(lesson);
-        },
-        rejected: (state) => {
-          state.status = "failed";
         },
       },
     ),

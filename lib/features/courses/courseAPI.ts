@@ -12,23 +12,38 @@ import {AxiosError} from "axios";
 
 // Fetch all courses
 export const fetchCourses = async (): Promise<Course[]> => {
-  const { data } = await api.get<Course[]>("/courses");
-  return data;
+  try {
+    const { data } = await api.get<Course[]>("/courses");
+    return data;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    throw new Error(error.response?.data.message || error.message || "Unknown API error");
+  }
 };
 
 // Add participant to a course
 export const addParticipant = async (userId: string, courseId: string): Promise<Participant> => {
-  const { data } = await api.post<Participant>("/participants", {userId, courseId});
-  return data;
+  try {
+    const { data } = await api.post<Participant>("/participants", {userId, courseId});
+    return data;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    throw new Error(error.response?.data.message || error.message || "Unknown API error");
+  }
 };
 
 export const setAttendanceStatusApi = async (attendance: Attendance): Promise<Attendance> => {
-  const { data } = await api.post<Attendance>("/attendances/set-status", {
-    userId: attendance.userId,
-    lessonId: attendance.lessonId,
-    status: attendance.status,
-  });
-  return data;
+  try {
+    const { data } = await api.post<Attendance>("/attendances/set-status", {
+      userId: attendance.userId,
+      lessonId: attendance.lessonId,
+      status: attendance.status,
+    });
+    return data;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    throw new Error(error.response?.data.message || error.message || "Unknown API error");
+  }
 };
 
 export const createCourseApi = async (course: Course): Promise<Course> => {
@@ -37,25 +52,28 @@ export const createCourseApi = async (course: Course): Promise<Course> => {
     return data;
   } catch (err) {
     const error = err as AxiosError<{ message: string }>;
-    // Throw a structured error for Redux to catch
-    if (error.response?.data?.message) {
-      throw new Error(error.response.data.message);
-    } else if (error.message) {
-      throw new Error(error.message);
-    } else {
-      throw new Error("Unknown error creating course");
-    }
+    throw new Error(error.response?.data.message || error.message || "Unknown API error");
   }
 };
 
 
 export const createLessonApi = async (lesson: CreateLesson): Promise<Lesson> => {
-  const { data } = await api.post<Lesson>("/lessons", lesson);
-  return data;
+  try {
+    const {data} = await api.post<Lesson>("/lessons", lesson);
+    return data;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    throw new Error(error.response?.data.message || error.message || "Unknown API error");
+  }
 };
 
 export const scanQrCode = async (qrCodeRequest: QrCodeRequest): Promise<QrCodeResponse> => {
-  const { data } = await api.post<QrCodeResponse>("/qr", qrCodeRequest);
-  return data;
+  try {
+    const { data } = await api.post<QrCodeResponse>("/qr", qrCodeRequest);
+    return data;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    throw new Error(error.response?.data.message || error.message || "Unknown API error");
+  }
 };
 
