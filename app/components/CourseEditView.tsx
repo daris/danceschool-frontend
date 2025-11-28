@@ -22,7 +22,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import {selectAvailableParticipantsForCourse} from "@/lib/selectors/availableParticipantsForCourse";
 import Button from "@mui/material/Button";
-import {Avatar, Box, LinearProgress, Typography} from "@mui/material";
+import {Alert, Avatar, Box, LinearProgress, Typography} from "@mui/material";
 import {stringAvatar} from "@/lib/avatar";
 import dayjs from "dayjs";
 import {AttendanceStatusSelector} from "@/app/components/AttendanceStatusSelector";
@@ -74,11 +74,8 @@ export const CourseEditView = (props: {id: string}) => {
     }
   }
 
-  const handleAttendanceStatusChange = async (attendance: Attendance|undefined, lessonId: string, userId: string, newStatus: AttendanceStatus|null) => {
+  const handleAttendanceBeforeStatusChange = async () => {
     storeScrollPosition();
-    if (!course) return;
-
-    await dispatch(setAttendanceStatus({attendance: {lessonId: lessonId, userId: userId, status: newStatus} as Attendance, courseId: course.id}));
   }
 
   // Restore scroll position after render
@@ -104,9 +101,7 @@ export const CourseEditView = (props: {id: string}) => {
 
   if (status == 'failed') {
     return (
-      <div>
-        <h1>There was an error!!!</h1>
-      </div>
+      <Alert severity="error">Failed to load course.</Alert>
     );
   }
 
@@ -182,7 +177,7 @@ export const CourseEditView = (props: {id: string}) => {
                         <Typography
                           variant="body1">{user?.firstName} {user?.lastName}</Typography>
                         {lastPass &&
-                          <Typography variant="caption" color="text.secondary">Karnet: {dayjs(lastPass.startTime).format("DD.MM")} - {dayjs(lastPass.endTime).format("DD.MM")}</Typography>
+                          <Typography variant="caption" color="text.secondary">User pass: {dayjs(lastPass.startTime).format("DD.MM")} - {dayjs(lastPass.endTime).format("DD.MM")}</Typography>
                         }
                       </Box>
                     </Box>
@@ -192,10 +187,13 @@ export const CourseEditView = (props: {id: string}) => {
                                sx={{
                                  backgroundColor: user?.passes?.find(p => course && dayjs(p.startTime).isBefore(lessonAttendance.lesson.startTime) && dayjs(p.endTime).isAfter(lessonAttendance.lesson.startTime) && p.courseIds.includes(course.id)) ? '#f0f0f0' : '#fff'
                                }}>
-                      <AttendanceStatusSelector
-                        status={lessonAttendance.attendance?.status}
-                        onStatusChange={(newStatus) => handleAttendanceStatusChange(lessonAttendance.attendance, lessonAttendance.lesson.id, participant.userId, newStatus)}
-                      ></AttendanceStatusSelector>
+                      {course &&
+                        <AttendanceStatusSelector
+                          courseId={course.id}
+                          attendance={lessonAttendance.attendance}
+                          beforeStatusChange={() => handleAttendanceBeforeStatusChange()}
+                        ></AttendanceStatusSelector>
+                      }
                     </TableCell>
                   ))}
 

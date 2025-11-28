@@ -1,17 +1,22 @@
 import {green, red, yellow} from "@mui/material/colors";
-import {Box, BoxProps, CircularProgress, Menu, MenuItem, SxProps, Tooltip} from "@mui/material";
+import {Box, BoxProps, CircularProgress, Menu, MenuItem, Snackbar, SnackbarCloseReason, SxProps, Tooltip} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import React, {useState} from "react";
-import {AttendanceStatus} from "@/lib/features/courses/types";
+import {Attendance, AttendanceStatus} from "@/lib/features/courses/types";
+import {createCourse, setAttendanceStatus} from "@/lib/features/courses/coursesApiSlice";
+import {useAppDispatch} from "@/lib/hooks";
 
 interface AttendanceStatusSelectorProps extends BoxProps {
-  status?: AttendanceStatus|null;
-  onStatusChange?: (newStatus: AttendanceStatus|null) => Promise<any>;
+  attendance: Attendance;
+  courseId: string;
+  beforeStatusChange?: () => Promise<any>;
 }
 
-export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> = ({status, onStatusChange, ...props}) => {
+export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> = ({attendance, courseId, beforeStatusChange, ...props}) => {
+  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [snackbarData, setSnackbarData] = useState<{isOpen: boolean, message?: string}>({isOpen: false, message: ''});
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -22,11 +27,30 @@ export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> =
   };
 
   const handleSelect = async (newStatus: AttendanceStatus|null) => {
+    await beforeStatusChange?.();
     setLoading(true);
+
+    const result = await dispatch(setAttendanceStatus({attendance: {lessonId: attendance.lessonId, userId: attendance.userId, status: newStatus} as Attendance, courseId: courseId}));
+    if (setAttendanceStatus.rejected.match(result)) {
+      setSnackbarData({isOpen: true, message: result.payload as string});
+      console.error("Error setting status:", result.payload);
+    }
+
     handleClose();
-    await onStatusChange?.(newStatus);
     setLoading(false);
   };
+
+  const handleSnackbarClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackbarData({isOpen: false});
+  };
+
 
   let statusProps: SxProps = {
     backgroundColor: '#fff',
@@ -35,21 +59,21 @@ export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> =
   };
   let icon = null;
 
-  if (status == AttendanceStatus.NORMAL) {
+  if (attendance.status == AttendanceStatus.NORMAL) {
     statusProps = {
       backgroundColor: green[50],
       border: '1px solid ' + green[100],
       color: green[800],
     };
     icon = <CheckIcon></CheckIcon>;
-  } else if (status == AttendanceStatus.FULL_PASS) {
+  } else if (attendance.status == AttendanceStatus.FULL_PASS) {
     statusProps = {
       backgroundColor: red[50],
       border: '1px solid ' + red[100],
       color: red[800],
     }
     icon = <CheckIcon></CheckIcon>;
-  } else if (status == AttendanceStatus.RESCHEDULED) {
+  } else if (attendance.status == AttendanceStatus.RESCHEDULED) {
     statusProps = {
       backgroundColor: yellow[50],
       border: '1px solid ' + yellow[100],
@@ -64,7 +88,15 @@ export const AttendanceStatusSelector: React.FC<AttendanceStatusSelectorProps> =
 
   return (
     <>
-      <Tooltip title={status}>
+      {snackbarData &&
+        <Snackbar
+          open={snackbarData.isOpen}
+          autoHideDuration={5000}
+          onClose={handleSnackbarClose}
+          message={snackbarData.message}
+        />
+      }
+      <Tooltip title={attendance.status}>
         <Box sx={{
           ...props,
           borderRadius: 3,

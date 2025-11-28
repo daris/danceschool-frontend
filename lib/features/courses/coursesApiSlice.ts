@@ -70,13 +70,16 @@ export const coursesSlice = createAppSlice({
       },
     ),
     setAttendanceStatus: create.asyncThunk(
-      async (params: {attendance: Attendance, courseId: string}) => {
-        const attendance = await setAttendanceStatusApi(params.attendance);
-
-        return {attendance: {
-          ...params.attendance,
-          id: attendance.id
-        }, courseId: params.courseId};
+      async (params: {attendance: Attendance, courseId: string}, { rejectWithValue }) => {
+        try {
+          const attendance = await setAttendanceStatusApi(params.attendance);
+          return {attendance: {
+              ...params.attendance,
+              id: attendance.id
+            }, courseId: params.courseId};
+        } catch (err: any) {
+          return rejectWithValue(err.message);
+        }
       },
       {
         fulfilled: (state, action) => {
