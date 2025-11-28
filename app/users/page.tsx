@@ -10,9 +10,6 @@ export default function UsersPage() {
       <Container maxWidth="xl">
         <h1>Users</h1>
         <UserList />
-        {/*<div style={{paddingTop: 30}}>*/}
-        {/*  <CreateCourseForm></CreateCourseForm>*/}
-        {/*</div>*/}
       </Container>
     </ProtectedRoute>
   );
