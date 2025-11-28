@@ -41,7 +41,6 @@ export const useStompSubscription = <T = any>(
     return () => {
       subscriptionRef.current?.unsubscribe();
       subscriptionRef.current = null;
-      console.log(`Unsubscribed from ${topic}`);
     };
   }, [topic, onMessage]);
 };
